@@ -12,7 +12,7 @@ export const NAV_ITEMS = [
 
 // Personal info
 export const PERSONAL_INFO = {
-  name: 'Harsh Verma',
+  name: 'Harshaas Verma',
   title: 'Full Stack Developer',
   email: 'harshbuildweb@gmail.com',
   phone: '+917742054087',
