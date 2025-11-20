@@ -1,0 +1,71 @@
+import { useEffect, useState, useRef } from 'react';
+import { gsap } from 'gsap';
+import './Loader.css';
+
+const Loader = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Prevent scrolling while loader is visible
+    document.body.style.overflow = 'hidden';
+    // Ensure page starts at top
+    window.scrollTo(0, 0);
+
+    // Run loader for 3-5 seconds (random between 3-5)
+    const duration = Math.random() * 2000 + 3000; // 3000-5000ms
+
+    const timer = setTimeout(() => {
+      if (!containerRef.current) return;
+      
+      // Fade out loader
+      gsap.to(containerRef.current, {
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          setIsVisible(false);
+          // Restore scrolling
+          document.body.style.overflow = '';
+          // Smooth scroll to top (Hero section)
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+      });
+    }, duration);
+
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  if (!isVisible) return null;
+
+  return (
+    <div ref={containerRef} className="loader-container">
+      <div>
+        <div className="loader">
+          <span>
+            <span />
+            <span />
+            <span />
+            <span />
+          </span>
+          <div className="base">
+            <span />
+            <div className="face" />
+          </div>
+        </div>
+        <div className="longfazers">
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Loader;
+
