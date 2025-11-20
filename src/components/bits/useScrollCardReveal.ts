@@ -68,50 +68,84 @@ export const useScrollCardReveal = (
       { x: -35, y: 30, rotate: -4, scale: 0.9 },
     ];
 
-    elements.forEach((element, index) => {
-      if (!element) return;
+    const triggers: ScrollTrigger[] = [];
 
-      const targetElement =
-        element.querySelector<HTMLElement>(contentSelector) || element;
+    // Wait a bit to ensure loader is done and layout is settled
+    const timeoutId = setTimeout(() => {
+      elements.forEach((element, index) => {
+        if (!element) return;
 
-      const animDirection =
-        directions[index] || defaultDirections[index % 6] || {
-          x: 0,
-          y: 30,
-          rotate: 0,
-          scale: 0.9,
-        };
+        const targetElement =
+          element.querySelector<HTMLElement>(contentSelector) || element;
 
-      gsap.fromTo(
-        targetElement,
-        {
-          opacity: 0,
-          x: animDirection.x ?? 0,
-          y: animDirection.y ?? 30,
-          rotation: animDirection.rotate ?? 0,
-          scale: animDirection.scale ?? 0.9,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          rotation: 0,
-          scale: 1,
-          duration,
-          ease,
-          scrollTrigger: {
-            trigger: element,
-            scroller,
-            start,
-            end,
-            scrub: true,
-          },
+        const animDirection =
+          directions[index] || defaultDirections[index % 6] || {
+            x: 0,
+            y: 30,
+            rotate: 0,
+            scale: 0.9,
+          };
+
+        // Check if element is already in viewport - if so, make it visible immediately
+        const rect = element.getBoundingClientRect();
+        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        // If already in viewport, set initial state to visible
+        if (isInViewport) {
+          gsap.set(targetElement, {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotation: 0,
+            scale: 1,
+          });
         }
-      );
-    });
+
+        const tween = gsap.fromTo(
+          targetElement,
+          {
+            opacity: isInViewport ? 1 : 0,
+            x: isInViewport ? 0 : (animDirection.x ?? 0),
+            y: isInViewport ? 0 : (animDirection.y ?? 30),
+            rotation: isInViewport ? 0 : (animDirection.rotate ?? 0),
+            scale: isInViewport ? 1 : (animDirection.scale ?? 0.9),
+          },
+          {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            rotation: 0,
+            scale: 1,
+            duration,
+            ease,
+            scrollTrigger: {
+              trigger: element,
+              scroller,
+              start,
+              end,
+              scrub: true,
+              // If already in viewport, start immediately
+              immediateRender: isInViewport,
+            },
+          }
+        );
+
+        // Store trigger for cleanup
+        if (tween.scrollTrigger) {
+          triggers.push(tween.scrollTrigger);
+        }
+      });
+    }, 200);
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      clearTimeout(timeoutId);
+      // Only kill triggers created by this hook
+      triggers.forEach((trigger) => trigger.kill());
+    };
+
+    return () => {
+      // Only kill triggers created by this hook
+      triggers.forEach((trigger) => trigger.kill());
     };
   }, [refs, options]);
 };

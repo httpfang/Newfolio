@@ -92,13 +92,23 @@ export default function SplitTextLines({
 
       // Animate lines
       const lineElements = parentDiv.querySelectorAll<HTMLElement>(".split-child");
+      if (lineElements.length === 0) return;
 
       const trigger = triggerElement?.current || container;
 
-      gsap.fromTo(
+      // Check if element is already in viewport
+      const rect = trigger.getBoundingClientRect();
+      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+      // If already in viewport, set initial state
+      if (isInViewport) {
+        gsap.set(lineElements, { yPercent: 0 });
+      }
+
+      const tween = gsap.fromTo(
         lineElements,
         {
-          yPercent: 100,
+          yPercent: isInViewport ? 0 : 100,
         },
         {
           yPercent: 0,
@@ -110,16 +120,15 @@ export default function SplitTextLines({
             start: scrollStart,
             end: scrollEnd,
             scrub: true,
+            immediateRender: isInViewport,
           },
         }
       );
 
       return () => {
-        ScrollTrigger.getAll().forEach((trigger) => {
-          if (trigger.vars.trigger === container) {
-            trigger.kill();
-          }
-        });
+        if (tween?.scrollTrigger) {
+          tween.scrollTrigger.kill();
+        }
       };
     });
   }, [children, duration, stagger, ease, scrollStart, scrollEnd, triggerElement]);

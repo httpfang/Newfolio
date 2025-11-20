@@ -45,34 +45,52 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
     const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
 
     const charElements = el.querySelectorAll('.inline-block');
+    if (charElements.length === 0) return;
 
-    gsap.fromTo(
-      charElements,
-      {
-        willChange: 'opacity, transform',
-        opacity: 0,
-        yPercent: 120,
-        scaleY: 2.3,
-        scaleX: 0.7,
-        transformOrigin: '50% 0%'
-      },
-      {
-        duration: animationDuration,
-        ease: ease,
-        opacity: 1,
-        yPercent: 0,
-        scaleY: 1,
-        scaleX: 1,
-        stagger: stagger,
-        scrollTrigger: {
-          trigger: el,
-          scroller,
-          start: scrollStart,
-          end: scrollEnd,
-          scrub: true
+    // Check if element is already in viewport
+    const rect = el.getBoundingClientRect();
+    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+    let tween: gsap.core.Tween | null = null;
+
+    // Small delay to ensure ScrollTrigger is ready (after loader completes)
+    const timeoutId = setTimeout(() => {
+      tween = gsap.fromTo(
+        charElements,
+        {
+          willChange: 'opacity, transform',
+          opacity: isInViewport ? 1 : 0,
+          yPercent: isInViewport ? 0 : 120,
+          scaleY: isInViewport ? 1 : 2.3,
+          scaleX: isInViewport ? 1 : 0.7,
+          transformOrigin: '50% 0%'
+        },
+        {
+          duration: animationDuration,
+          ease: ease,
+          opacity: 1,
+          yPercent: 0,
+          scaleY: 1,
+          scaleX: 1,
+          stagger: stagger,
+          scrollTrigger: {
+            trigger: el,
+            scroller,
+            start: scrollStart,
+            end: scrollEnd,
+            scrub: true,
+            immediateRender: isInViewport,
+          }
         }
+      );
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (tween?.scrollTrigger) {
+        tween.scrollTrigger.kill();
       }
-    );
+    };
   }, [scrollContainerRef, animationDuration, ease, scrollStart, scrollEnd, stagger]);
 
   return (

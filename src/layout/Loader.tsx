@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Loader.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Loader = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -27,6 +30,21 @@ const Loader = () => {
           setIsVisible(false);
           // Restore scrolling
           document.body.style.overflow = '';
+          
+          // Critical: Refresh ScrollTrigger after loader completes
+          // This ensures all scroll-based animations recalculate positions
+          requestAnimationFrame(() => {
+            ScrollTrigger.refresh();
+            // Additional refreshes after layout settles
+            setTimeout(() => {
+              ScrollTrigger.refresh();
+              // One more refresh to ensure everything is calculated correctly
+              setTimeout(() => {
+                ScrollTrigger.refresh();
+              }, 200);
+            }, 100);
+          });
+          
           // Smooth scroll to top (Hero section)
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },

@@ -256,35 +256,52 @@ export default function Projects() {
     const triggers: ScrollTrigger[] = [];
     const tweens: gsap.core.Tween[] = [];
 
-    statsRef.current.forEach((stat, index) => {
-      if (!stat) return;
+    // Small delay to ensure ScrollTrigger is ready after loader
+    const timeoutId = setTimeout(() => {
+      statsRef.current.forEach((stat, index) => {
+        if (!stat) return;
 
-      const tween = gsap.fromTo(
-        stat,
-        {
-          opacity: 0,
-          x: index % 2 === 0 ? -30 : 30,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: "power2.out",
-          delay: index * 0.1,
-          scrollTrigger: {
-            trigger: stat,
-            start: "top 85%",
-          },
+        // Check if element is already in viewport
+        const rect = stat.getBoundingClientRect();
+        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+        // If already in viewport, make it visible immediately
+        if (isInViewport) {
+          gsap.set(stat, {
+            opacity: 1,
+            x: 0,
+          });
         }
-      );
 
-      tweens.push(tween);
-      if (tween.scrollTrigger) {
-        triggers.push(tween.scrollTrigger);
-      }
-    });
+        const tween = gsap.fromTo(
+          stat,
+          {
+            opacity: isInViewport ? 1 : 0,
+            x: isInViewport ? 0 : (index % 2 === 0 ? -30 : 30),
+          },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            delay: index * 0.1,
+            scrollTrigger: {
+              trigger: stat,
+              start: "top 85%",
+              immediateRender: isInViewport,
+            },
+          }
+        );
+
+        tweens.push(tween);
+        if (tween.scrollTrigger) {
+          triggers.push(tween.scrollTrigger);
+        }
+      });
+    }, 100);
 
     return () => {
+      clearTimeout(timeoutId);
       tweens.forEach((tween) => tween.kill());
       triggers.forEach((trigger) => trigger.kill());
     };
