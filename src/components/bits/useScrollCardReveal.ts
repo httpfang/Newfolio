@@ -1,0 +1,118 @@
+import { useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface AnimationDirection {
+  x?: number;
+  y?: number;
+  rotate?: number;
+  scale?: number;
+}
+
+interface UseScrollCardRevealOptions {
+  directions?: AnimationDirection[];
+  start?: string;
+  end?: string;
+  duration?: number;
+  ease?: string;
+  contentSelector?: string;
+  scrollContainerRef?: React.RefObject<HTMLElement>;
+  enabled?: boolean;
+}
+
+// Hook version for multiple cards with different directions
+// Accepts either a ref to an array of elements, an array of refs, or an array of elements
+export const useScrollCardReveal = (
+  refs: React.MutableRefObject<(HTMLDivElement | null)[]> | React.RefObject<HTMLDivElement>[] | (HTMLDivElement | null)[],
+  options?: UseScrollCardRevealOptions
+) => {
+  useEffect(() => {
+    const {
+      directions = [],
+      start = "top 85%",
+      end = "top 50%",
+      duration = 1.2,
+      ease = "power3.out",
+      contentSelector = ".section-content",
+      scrollContainerRef,
+      enabled = true,
+    } = options || {};
+
+    if (!enabled) return;
+
+    // Get the actual array of elements
+    let elements: (HTMLDivElement | null)[];
+    if (refs && "current" in refs) {
+      // It's a ref object containing an array
+      elements = refs.current || [];
+    } else if (Array.isArray(refs)) {
+      // It's already an array
+      elements = refs.map((ref) => {
+        // Handle both ref objects and direct element references
+        return ref && "current" in ref ? ref.current : ref;
+      });
+    } else {
+      elements = [];
+    }
+
+    const scroller = scrollContainerRef?.current || window;
+
+    const defaultDirections: AnimationDirection[] = [
+      { x: -50, y: 30, rotate: -5, scale: 0.9 },
+      { x: 50, y: 30, rotate: 5, scale: 0.9 },
+      { x: 30, y: 40, rotate: 3, scale: 0.9 },
+      { x: -40, y: 25, rotate: -3, scale: 0.9 },
+      { x: 45, y: 35, rotate: 4, scale: 0.9 },
+      { x: -35, y: 30, rotate: -4, scale: 0.9 },
+    ];
+
+    elements.forEach((element, index) => {
+      if (!element) return;
+
+      const targetElement =
+        element.querySelector<HTMLElement>(contentSelector) || element;
+
+      const animDirection =
+        directions[index] || defaultDirections[index % 6] || {
+          x: 0,
+          y: 30,
+          rotate: 0,
+          scale: 0.9,
+        };
+
+      gsap.fromTo(
+        targetElement,
+        {
+          opacity: 0,
+          x: animDirection.x ?? 0,
+          y: animDirection.y ?? 30,
+          rotation: animDirection.rotate ?? 0,
+          scale: animDirection.scale ?? 0.9,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 1,
+          duration,
+          ease,
+          scrollTrigger: {
+            trigger: element,
+            scroller,
+            start,
+            end,
+            scrub: true,
+          },
+        }
+      );
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [refs, options]);
+};
+
