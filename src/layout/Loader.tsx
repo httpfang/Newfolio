@@ -21,6 +21,13 @@ const Loader = () => {
     const timer = setTimeout(() => {
       if (!containerRef.current) return;
       
+      // Dispatch custom event IMMEDIATELY when loader starts to fade out
+      // This allows animations to start right away, not after fade completes
+      window.dispatchEvent(new CustomEvent('loaderComplete'));
+      
+      // Restore scrolling immediately
+      document.body.style.overflow = '';
+      
       // Fade out loader
       gsap.to(containerRef.current, {
         opacity: 0,
@@ -28,8 +35,6 @@ const Loader = () => {
         ease: 'power2.inOut',
         onComplete: () => {
           setIsVisible(false);
-          // Restore scrolling
-          document.body.style.overflow = '';
           
           // Critical: Refresh ScrollTrigger after loader completes
           // This ensures all scroll-based animations recalculate positions

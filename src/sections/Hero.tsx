@@ -13,25 +13,54 @@ export default function Hero() {
   const logoRef = useRef<HTMLAnchorElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
-  // GSAP Animations on Mount
+  // GSAP Animations on Mount - Wait for loader to complete
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate logo
-      gsap.from(logoRef.current, {
-        opacity: 0,
-        x: -30,
-        duration: 0.8,
-        ease: 'power3.out',
-      });
+      // Function to start animations immediately
+      const startAnimations = () => {
+        // Use requestAnimationFrame to ensure smooth start on next frame
+        requestAnimationFrame(() => {
+          // Animate logo
+          gsap.from(logoRef.current, {
+            opacity: 0,
+            x: -30,
+            duration: 0.8,
+            ease: 'power3.out',
+          });
 
-      // Animate CTA button
-      gsap.from(ctaRef.current, {
-        opacity: 0,
-        scale: 0.8,
-        duration: 0.6,
-        ease: 'back.out(1.7)',
-        delay: 0.6,
-      });
+          // Animate CTA button
+          gsap.from(ctaRef.current, {
+            opacity: 0,
+            scale: 0.8,
+            duration: 0.6,
+            ease: 'back.out(1.7)',
+            delay: 0.6,
+          });
+        });
+      };
+
+      // Check if loader is already complete
+      const loaderElement = document.querySelector('.loader-container');
+      
+      let cleanup: (() => void) | undefined;
+      
+      if (!loaderElement) {
+        // Loader already completed, start animations immediately
+        startAnimations();
+      } else {
+        // Wait for loader to complete - start immediately when event fires
+        const handleLoaderComplete = () => {
+          startAnimations();
+        };
+        
+        window.addEventListener('loaderComplete', handleLoaderComplete, { once: true });
+        
+        cleanup = () => {
+          window.removeEventListener('loaderComplete', handleLoaderComplete);
+        };
+      }
+
+      return cleanup;
     });
 
     return () => ctx.revert();

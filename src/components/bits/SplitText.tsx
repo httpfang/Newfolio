@@ -26,15 +26,44 @@ export default function SplitText({
 
       gsap.set(spans, { opacity: 0, y: 12 });
 
-      spans.forEach((el, i) => {
-        gsap.to(el, {
-          opacity: 1,
-          y: 0,
-          duration,
-          ease: "power3.out",
-          delay: (i * delay) / 1000, // convert ms to seconds
+      // Function to start the animation immediately
+      const startAnimation = () => {
+        // Use requestAnimationFrame to ensure smooth start on next frame
+        requestAnimationFrame(() => {
+          spans.forEach((el, i) => {
+            gsap.to(el, {
+              opacity: 1,
+              y: 0,
+              duration,
+              ease: "power3.out",
+              delay: (i * delay) / 1000, // convert ms to seconds
+            });
+          });
         });
-      });
+      };
+
+      // Check if loader is already complete (loader element doesn't exist)
+      const loaderElement = document.querySelector('.loader-container');
+      
+      let cleanup: (() => void) | undefined;
+      
+      if (!loaderElement) {
+        // Loader already completed, start animation immediately
+        startAnimation();
+      } else {
+        // Wait for loader to complete - start immediately when event fires
+        const handleLoaderComplete = () => {
+          startAnimation();
+        };
+        
+        window.addEventListener('loaderComplete', handleLoaderComplete, { once: true });
+        
+        cleanup = () => {
+          window.removeEventListener('loaderComplete', handleLoaderComplete);
+        };
+      }
+
+      return cleanup;
     }, containerRef);
 
     return () => ctx.revert();

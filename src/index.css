@@ -1,6 +1,9 @@
 /* Tailwind v4 base, components, and utilities */
 @import "tailwindcss";
 
+/* Lenis smooth scroll styles */
+@import "lenis/dist/lenis.css";
+
 /* Theme tokens for Tailwind v4 mapped to shadcn variables */
 @theme {
   --color-background: hsl(var(--background));
