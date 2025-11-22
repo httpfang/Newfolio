@@ -98,6 +98,6 @@ export function useMagneticCursor<T extends HTMLElement = HTMLElement>(
     };
   }, [strength]);
 
-  return elementRef;
+  return elementRef as React.RefObject<T>;  
 }
 

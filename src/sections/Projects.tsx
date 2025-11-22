@@ -6,6 +6,23 @@ import { useScrollCardReveal } from "@/components/bits/useScrollCardReveal";
 import { useMagneticCursor } from "@/hooks/useMagneticCursor";
 import { PERSONAL_INFO } from "@/constants/constants";
 import { cn } from "@/lib/utils";
+import LogoLoop from "@/components/bits/LogoLoop";
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+  SiNodedotjs,
+  SiExpress,
+  SiMongodb,
+  SiPostgresql,
+  SiGit,
+  SiGithub,
+  SiVercel,
+  SiPostman,
+  SiFigma,
+  SiDocker,
+} from "react-icons/si";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -58,6 +75,25 @@ const skillsData: Record<SkillCategory, string[]> = {
 
 // Tab rotation values for hover effect
 const TAB_ROTATIONS: number[] = [-3, 2, -2];
+
+// Technology logos for LogoLoop
+const techLogos = [
+  { node: <SiReact />, title: "React", href: "https://react.dev" },
+  { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
+  { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
+  { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+  { node: <span className="font-bold text-[#2D5016]">GSAP</span>, title: "GSAP", href: "https://gsap.com" },
+  { node: <SiNodedotjs />, title: "Node.js", href: "https://nodejs.org" },
+  { node: <SiExpress />, title: "Express", href: "https://expressjs.com" },
+  { node: <SiMongodb />, title: "MongoDB", href: "https://www.mongodb.com" },
+  { node: <SiPostgresql />, title: "PostgreSQL", href: "https://www.postgresql.org" },
+  { node: <SiGit />, title: "Git", href: "https://git-scm.com" },
+  { node: <SiGithub />, title: "GitHub", href: "https://github.com" },
+  { node: <SiVercel />, title: "Vercel", href: "https://vercel.com" },
+  { node: <SiPostman />, title: "Postman", href: "https://www.postman.com" },
+  { node: <SiFigma />, title: "Figma", href: "https://www.figma.com" },
+  { node: <SiDocker />, title: "Docker", href: "https://www.docker.com" },
+];
 
 const CONTRIBUTIONS_QUERY = `
   query ($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -837,17 +873,34 @@ export default function Projects() {
         {/* Skills Section */}
         <div id="skills" className="mt-20 scroll-mt-[70px]">
           <div ref={skillsHeadingRef} className="mb-16">
-            <ScrollFloat
-              animationDuration={1}
-              ease="back.inOut(2)"
-              scrollStart="center bottom+=50%"
-              scrollEnd="bottom bottom-=40%"
-              stagger={0.03}
-              containerClassName="my-0"
-              textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
-            >
-              SKILLS
-            </ScrollFloat>
+            <div className="flex items-center gap-6 md:gap-8 mb-4">
+              <ScrollFloat
+                animationDuration={1}
+                ease="back.inOut(2)"
+                scrollStart="center bottom+=50%"
+                scrollEnd="bottom bottom-=40%"
+                stagger={0.03}
+                containerClassName="my-0"
+                textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
+              >
+                SKILLS
+              </ScrollFloat>
+              <div className="flex-1 h-[60px] md:h-[80px] relative overflow-hidden">
+                <LogoLoop
+                  logos={techLogos}
+                  speed={80}
+                  direction="left"
+                  logoHeight={48}
+                  gap={48}
+                  hoverSpeed={40}
+                  scaleOnHover
+                  fadeOut
+                  fadeOutColor="#F5F3EE"
+                  ariaLabel="Technology stack"
+                  className="h-full"
+                />
+              </div>
+            </div>
             <div className="divider-container flex items-center gap-3 mt-4">
               <div className="h-px w-12 bg-[#2D5016] opacity-30"></div>
               <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">
