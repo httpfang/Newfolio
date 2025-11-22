@@ -4,7 +4,6 @@ import {
   Hero,
   About,
   Projects,
-  Skills,
   ExperienceSection,
   Contact,
 } from '@/sections';
@@ -53,7 +52,6 @@ function App() {
             <Hero />
             <About />
             <Projects />
-            <Skills />
             <ExperienceSection />
             <Contact />
           </main>
