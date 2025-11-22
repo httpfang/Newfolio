@@ -16,7 +16,7 @@ interface UseMagneticCursorOptions {
 export function useMagneticCursor<T extends HTMLElement = HTMLElement>(
   options: UseMagneticCursorOptions = {}
 ): React.RefObject<T> {
-  const elementRef = useRef<T>(null);
+  const elementRef = useRef<T | null>(null);
   const { strength = 0.2 } = options;
   const animationRef = useRef<gsap.core.Tween | null>(null);
 
