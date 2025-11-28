@@ -429,7 +429,7 @@ export default function ExperienceSection() {
       <div className="absolute inset-0 pointer-events-none">
         <LightRays
           raysOrigin="top-center"
-          raysColor="#00ffff"
+          raysColor="white"
           raysSpeed={1.4}
           lightSpread={1}
           rayLength={3}
@@ -438,7 +438,6 @@ export default function ExperienceSection() {
           followMouse={true}
           mouseInfluence={0.5}
           noiseAmount={0.19}
-          distortion={0.1}
           pulsating={false}
           className="custom-rays"
         />
