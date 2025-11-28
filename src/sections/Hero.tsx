@@ -252,12 +252,16 @@ export default function Hero() {
       >
       <div className="max-w-6xl mx-auto w-full mt-20">
         {/* Top playful illustration vibes */}
-        <div className="pointer-events-none absolute inset-x-0 top-8 flex justify-center ">
+        <div className="pointer-events-none flex flex-col items-center justify-center md:absolute md:inset-x-0 md:top-8">
           <img
             src={GitStreakChart}
             alt="Git streak chart"
-            className="hidden md:block w-full max-w-[1200px] h-auto"
+            className="block w-full max-w-[720px] md:max-w-[1200px] h-auto"
           />
+          {/* Small italic caption below image */}
+          <p className="block mt-2 text-xs italic text-[#4A4947]">
+            dont take the content serious im still building
+          </p>
         </div>
 
         {/* Headline */}
