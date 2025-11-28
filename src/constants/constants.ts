@@ -107,14 +107,12 @@ export const SKILLS: Skill[] = [
   { name: 'Tailwind CSS', category: 'frontend', level: 'advanced' },
   { name: 'GSAP', category: 'frontend', level: 'intermediate' },
   { name: 'Framer Motion', category: 'frontend', level: 'intermediate' },
-  { name: 'Locomotive', category: 'frontend', level: 'intermediate' },
   // Backend
   { name: 'Node.js', category: 'backend', level: 'advanced' },
   { name: 'Express.js', category: 'backend', level: 'advanced' },
   // Tools & Platforms
   { name: 'Git', category: 'tool', level: 'advanced' },
   { name: 'Docker', category: 'tool', level: 'intermediate' },
-  { name: 'DevOps', category: 'tool', level: 'intermediate' },
   { name: 'Postman', category: 'tool', level: 'advanced' },
   { name: 'MongoDB', category: 'tool', level: 'advanced' },
   { name: 'Drizzle ORM', category: 'tool', level: 'intermediate' },
