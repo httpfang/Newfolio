@@ -548,7 +548,7 @@ export default function Contact() {
 
               {/* Social Icons */}
               <a
-                href="https://www.linkedin.com/in/harsh-verma-5b136b268/"
+                href="https://www.linkedin.com/in/harsh-verma-develop/"
                 className="hover:opacity-70 transition-opacity"
                 aria-label="LinkedIn"
                 target="_blank"
@@ -565,7 +565,7 @@ export default function Contact() {
                 </svg>
               </a>
               <a
-                href="https://www.instagram.com/harsh_verma_official/"
+                href="https://www.instagram.com/fanggore/"
                 className="hover:opacity-70 transition-opacity"
                 aria-label="Instagram"
                 target="_blank"
@@ -581,9 +581,9 @@ export default function Contact() {
                 </svg>
               </a>
               <a
-                href="https://www.facebook.com/harsh.verma.54922414"
+                href="https://x.com/fanghttp"
                 className="hover:opacity-70 transition-opacity"
-                aria-label="Facebook"
+                aria-label="Twitter"
                 target="_blank"
                 rel="noreferrer noopener"
               >
@@ -593,7 +593,7 @@ export default function Contact() {
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
-                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
 
