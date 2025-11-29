@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
-import { getSkillIcon, imageBasedSkills } from "@/lib/skillIcons";
+import { getSkillIcon, imageBasedSkills } from "@/components/Skill/skillIcons";
 import { cn } from "@/lib/utils";
 
 interface SkillItemProps {

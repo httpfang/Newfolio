@@ -1,9 +1,9 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ScrollFloat from "@/components/bits/ScrollFloat";
-import PixelTransition from "@/components/bits/PixelTransition";
-import { useScrollCardReveal } from "@/components/bits/useScrollCardReveal";
+import ScrollFloat from "@/bits/ScrollFloat";
+import PixelTransition from "@/bits/PixelTransition";
+import { useScrollCardReveal } from "@/bits/useScrollCardReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ChevronDown, Check, RefreshCw, Clock } from 'lucide-react';
-import ScrollFloat from '@/components/bits/ScrollFloat';
-import { useScrollCardReveal } from '@/components/bits/useScrollCardReveal';
-import LightRays from '@/components/bits/LightRays.bg';
+import ScrollFloat from '@/bits/ScrollFloat';
+import { useScrollCardReveal } from '@/bits/useScrollCardReveal';
+import LightRays from '@/bits/LightRays.bg';
 
 gsap.registerPlugin(ScrollTrigger);
 

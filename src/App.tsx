@@ -1,13 +1,13 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { Loader } from '@/layout';
-import Hero from '@/sections/Hero';
+import Hero from '@/components/Hero/Hero';
 import { useLenis } from '@/hooks/useLenis';
 
 // Lazy load heavy sections for code splitting
-const About = lazy(() => import('@/sections/About'));
-const Projects = lazy(() => import('@/sections/Projects'));
-const ExperienceSection = lazy(() => import('@/sections/Experience'));
-const Contact = lazy(() => import('@/sections/Contact'));
+const About = lazy(() => import('@/components/About/About'));
+const Projects = lazy(() => import('@/components/Project/Projects'));
+const ExperienceSection = lazy(() => import('@/components/Experience/Experience'));
+const Contact = lazy(() => import('@/components/Contact/Contact'));
 
 // Loading fallback component
 const SectionLoader = () => (

@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ScrollFloat from "@/components/bits/ScrollFloat";
+import ScrollFloat from "@/bits/ScrollFloat";
 import { useMagneticCursor } from "@/hooks/useMagneticCursor";
 import { SKILLS } from "@/constants/constants";
 import { cn } from "@/lib/utils";
-import LogoLoop from "@/components/bits/LogoLoop";
-import SkillOverlay from "@/components/skills/SkillOverlay";
-import { getSkillIconForLoop } from "@/lib/skillIcons";
+import LogoLoop from "@/bits/LogoLoop";
+import SkillOverlay from "@/components/Skill/SkillOverlay";
+import { getSkillIconForLoop } from "@/components/Skill/skillIcons";
 
 gsap.registerPlugin(ScrollTrigger);
 

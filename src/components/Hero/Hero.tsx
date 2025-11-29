@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/ui/button';
 import { PERSONAL_INFO, NAV_ITEMS } from '@/constants/constants';
 import { cn } from '@/lib/utils';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import GitStreakChart from '@/assets/GitStreakChart.png';
-import SplitText from '@/components/bits/SplitText';
+import SplitText from '@/bits/SplitText';
 
 gsap.registerPlugin(ScrollToPlugin);
 

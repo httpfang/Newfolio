@@ -1,4 +1,4 @@
-import type { Project, Skill, Experience, SocialLink } from '@/types/types';
+import type { Project, Skill, Experience } from '@/types/types';
 
 // Navigation items
 export const NAV_ITEMS = [
@@ -121,9 +121,5 @@ export const SKILLS: Skill[] = [
   { name: 'Clerk', category: 'tool', level: 'intermediate' },
 ];
 
-// Social links - update with your actual URLs
-export const SOCIAL_LINKS: SocialLink[] = [
-  { name: 'LinkedIn', url: 'https://linkedin.com/in/yourprofile', icon: 'linkedin' },
-  { name: 'GitHub', url: 'https://github.com/yourusername', icon: 'github' },
-];
+
 

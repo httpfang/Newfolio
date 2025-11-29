@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import TiltedCard from "../components/bits/TiltedCard";
-import { sendContactEmail, type ContactFormData } from "../lib/emailService";
+import TiltedCard from "../../bits/TiltedCard";
+import { sendContactEmail, type ContactFormData } from "../../lib/emailService";
 import {
   validateContactForm,
   validateField,
   type FormErrors,
-} from "../lib/formValidation";
+} from "../../lib/formValidation";
 
 export default function Contact() {
   const sectionRef = useRef(null);
