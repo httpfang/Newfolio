@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import TiltedCard from "../components/bits/TiltedCard";
 import ContactImg from "../assets/ContactImg.png";
+import { sendContactEmail, type ContactFormData } from "../lib/emailService";
+import {
+  validateContactForm,
+  validateField,
+  type FormErrors,
+} from "../lib/formValidation";
 
 export default function Contact() {
   const sectionRef = useRef(null);
@@ -15,6 +21,13 @@ export default function Contact() {
     email: "",
     description: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const observerOptions = {
@@ -46,8 +59,56 @@ export default function Contact() {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = () => {
-    console.log("Form submitted:", formData);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate all fields before submission
+    const validation = validateContactForm(formData);
+    setErrors(validation.errors);
+
+    if (!validation.isValid) {
+      // Mark all fields as touched to show errors
+      setTouched({
+        firstName: true,
+        lastName: true,
+        email: true,
+        description: true,
+      });
+      setSubmitStatus({
+        type: "error",
+        message: "Please fix the errors before submitting",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: "" });
+
+    const result = await sendContactEmail(formData as ContactFormData);
+
+    if (result.success) {
+      setSubmitStatus({
+        type: "success",
+        message: result.message,
+      });
+      // Reset form and validation states
+      setFormData({
+        firstName: "",
+        lastName: "",
+        service: "",
+        email: "",
+        description: "",
+      });
+      setErrors({});
+      setTouched({});
+    } else {
+      setSubmitStatus({
+        type: "error",
+        message: result.message,
+      });
+    }
+
+    setIsSubmitting(false);
   };
 
   const handleChange = (
@@ -55,10 +116,53 @@ export default function Contact() {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors({
+        ...errors,
+        [name]: undefined,
+      });
+    }
+
+    // Validate field in real-time if it has been touched
+    if (touched[name]) {
+      const fieldError = validateField(name, value);
+      setErrors({
+        ...errors,
+        [name]: fieldError,
+      });
+    }
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setTouched({
+      ...touched,
+      [name]: true,
+    });
+
+    // Validate field on blur
+    const fieldError = validateField(name, value);
+    setErrors({
+      ...errors,
+      [name]: fieldError,
+    });
+  };
+
+  // Check if form is valid
+  const isFormValid = () => {
+    const validation = validateContactForm(formData);
+    return validation.isValid;
   };
 
   return (
@@ -104,6 +208,18 @@ export default function Contact() {
           border-bottom-color: #666;
         }
 
+        .form-input.error,
+        .form-textarea.error,
+        .form-select.error {
+          border-bottom-color: #ef4444;
+        }
+
+        .form-input.valid,
+        .form-textarea.valid,
+        .form-select.valid {
+          border-bottom-color: #10b981;
+        }
+
         .form-textarea {
           resize: none;
           font-family: inherit;
@@ -128,6 +244,10 @@ export default function Contact() {
 
         .submit-btn:active {
           transform: scale(0.98);
+        }
+
+        .submit-btn:disabled {
+          transform: none;
         }
 
         @media (max-width: 768px) {
@@ -190,7 +310,7 @@ export default function Contact() {
 
           {/* Right Column - Form */}
           <div ref={formRef} className="reveal-element stagger-2">
-            <div className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-8">
               {/* Name Fields */}
               <div
                 className="grid form-grid gap-6"
@@ -203,8 +323,22 @@ export default function Contact() {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="form-input"
+                    onBlur={handleBlur}
+                    className={`form-input ${
+                      touched.firstName
+                        ? errors.firstName
+                          ? "error"
+                          : formData.firstName
+                          ? "valid"
+                          : ""
+                        : ""
+                    }`}
                   />
+                  {touched.firstName && errors.firstName && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.firstName}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm mb-2">Last Name</label>
@@ -213,8 +347,22 @@ export default function Contact() {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="form-input"
+                    onBlur={handleBlur}
+                    className={`form-input ${
+                      touched.lastName
+                        ? errors.lastName
+                          ? "error"
+                          : formData.lastName
+                          ? "valid"
+                          : ""
+                        : ""
+                    }`}
                   />
+                  {touched.lastName && errors.lastName && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.lastName}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -237,37 +385,94 @@ export default function Contact() {
 
               {/* Email */}
               <div>
-                <label className="block text-sm mb-2">Email (required)</label>
+                <label className="block text-sm mb-2">
+                  Email <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="form-input"
+                  onBlur={handleBlur}
+                  className={`form-input ${
+                    touched.email
+                      ? errors.email
+                        ? "error"
+                        : formData.email && !errors.email
+                        ? "valid"
+                        : ""
+                      : ""
+                  }`}
+                  required
                 />
+                {touched.email && errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
               </div>
 
               {/* Project Description */}
               <div>
                 <label className="block text-sm mb-2">
-                  Project description
+                  Project description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  className="form-textarea"
+                  onBlur={handleBlur}
+                  className={`form-textarea ${
+                    touched.description
+                      ? errors.description
+                        ? "error"
+                        : formData.description && !errors.description
+                        ? "valid"
+                        : ""
+                      : ""
+                  }`}
                   rows={4}
+                  required
                 />
+                {touched.description && errors.description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.description}
+                  </p>
+                )}
+                {formData.description && !errors.description && (
+                  <p className="text-green-600 text-xs mt-1">
+                    {formData.description.length} characters
+                  </p>
+                )}
               </div>
+
+              {/* Status Message */}
+              {submitStatus.type && (
+                <div
+                  className={`p-4 rounded-lg ${
+                    submitStatus.type === "success"
+                      ? "bg-green-50 text-green-800 border border-green-200"
+                      : "bg-red-50 text-red-800 border border-red-200"
+                  }`}
+                >
+                  {submitStatus.message}
+                </div>
+              )}
 
               {/* Submit Button */}
               <div>
-                <button onClick={handleSubmit} className="submit-btn">
-                  Submit
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !isFormValid()}
+                  className="submit-btn disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? "Sending..." : "Submit"}
                 </button>
+                {!isFormValid() && (
+                  <p className="text-sm text-gray-500 mt-2">
+                    Please fill in all required fields to submit
+                  </p>
+                )}
               </div>
-            </div>
+            </form>
           </div>
         </div>
 
