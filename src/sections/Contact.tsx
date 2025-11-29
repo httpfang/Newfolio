@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import TiltedCard from "../components/bits/TiltedCard";
-import ContactImg from "../assets/ContactImg.png";
 import { sendContactEmail, type ContactFormData } from "../lib/emailService";
 import {
   validateContactForm,
@@ -286,7 +285,7 @@ export default function Contact() {
 
               <div className="mt-15">
                 <TiltedCard
-                  imageSrc={ContactImg}
+                  imageSrc="https://media.licdn.com/dms/image/v2/D5603AQEMnSYb1oo-UQ/profile-displayphoto-scale_200_200/B56Zfn.oG6GQAg-/0/1751943646266?e=1766016000&v=beta&t=V5kgTuD_LcAmH-9SBXkCh_IKxR24HDnz6EUXsspMaPE"
                   altText="Harsh verma - GNX Album Cover"
                   captionText="Harsh verma - Fangore"
                   containerHeight="380px"

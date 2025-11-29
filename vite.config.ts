@@ -11,4 +11,24 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate vendor chunks
+          'react-vendor': ['react', 'react-dom'],
+          'gsap-vendor': ['gsap', '@gsap/react'],
+          'animation-vendor': ['lenis', 'motion'],
+          // Separate heavy UI libraries
+          'ui-vendor': [
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tabs',
+            'lucide-react',
+            'react-icons',
+          ],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600, // Increase limit slightly for better chunking
+  },
 })

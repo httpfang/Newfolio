@@ -1,13 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Loader } from '@/layout';
-import {
-  Hero,
-  About,
-  Projects,
-  ExperienceSection,
-  Contact,
-} from '@/sections';
+import Hero from '@/sections/Hero';
 import { useLenis } from '@/hooks/useLenis';
+
+// Lazy load heavy sections for code splitting
+const About = lazy(() => import('@/sections/About'));
+const Projects = lazy(() => import('@/sections/Projects'));
+const ExperienceSection = lazy(() => import('@/sections/Experience'));
+const Contact = lazy(() => import('@/sections/Contact'));
+
+// Loading fallback component
+const SectionLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-pulse text-gray-400">Loading...</div>
+  </div>
+);
 
 function App() {
   const [loaderComplete, setLoaderComplete] = useState(false);
@@ -50,10 +57,18 @@ function App() {
         <div className="w-full min-h-[calc(100vh-3rem)] md:min-h=[calc(100vh-4rem)] bg-[#F5F5F5] rounded-3xl shadow-2xl overflow-hidden border-4 border-[#5865F2]">
           <main>
             <Hero />
-            <About />
-            <Projects />
-            <ExperienceSection />
-            <Contact />
+            <Suspense fallback={<SectionLoader />}>
+              <About />
+            </Suspense>
+            <Suspense fallback={<SectionLoader />}>
+              <Projects />
+            </Suspense>
+            <Suspense fallback={<SectionLoader />}>
+              <ExperienceSection />
+            </Suspense>
+            <Suspense fallback={<SectionLoader />}>
+              <Contact />
+            </Suspense>
           </main>
         </div>
       </div>
