@@ -81,6 +81,28 @@ export default function Hero() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Prevent body scroll when menu overlay is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      // Apply styles to prevent scrolling
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore scroll position when menu closes
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isMenuOpen]);
+
   const openMenu = () => {
     setIsMenuOpen(true);
     requestAnimationFrame(() => {
@@ -174,8 +196,8 @@ export default function Hero() {
 
         {/* Full-screen Overlay Menu */}
         {isMenuOpen && (
-          <div ref={menuRef} className="fixed inset-0 z-[100] bg-[#e8defa] text-[#1a1a1a]">
-            <div className="flex flex-col h-full">
+          <div ref={menuRef} className="fixed inset-0 z-[100] bg-[#e8defa] text-[#1a1a1a] overflow-y-auto">
+            <div className="flex flex-col h-full min-h-screen">
               {/* Top bar */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-black/10">
                 <span className="text-xs tracking-widest uppercase">{PERSONAL_INFO.name || 'Portfolio'}</span>

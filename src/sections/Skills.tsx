@@ -85,7 +85,6 @@ const skillIconMap: Record<string, React.ReactNode> = {
   'MongoDB': <SiMongodb />,
   'PostgreSQL': <SiPostgresql />,
   'Drizzle ORM': <img src="https://pbs.twimg.com/media/F7V2rLQWUAAgaLh.jpg" alt="Drizzle ORM" className="h-[48px] w-auto object-contain" />,
-  'Neon DB': <img src="https://avatars.githubusercontent.com/u/77690634?v=4" alt="Neon DB" className="h-[48px] w-auto object-contain rounded-full" />,
   'AWS': <SiAmazon />,
   'Stripe': <SiStripe />,
   'Clerk': <img src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/logos/clerk-uvna1mxd54k50cohb8o2i.png/clerk-nzr7956knokwjx841f6yye.png?_a=DATAg1AAZAA0" alt="Clerk" className="h-[48px] w-auto object-contain" />,
@@ -99,7 +98,7 @@ const getSkillIcon = (skillName: string): React.ReactNode => {
 };
 
 // List of skills that use image-based icons (including SVGs)
-const imageBasedSkills = ['GSAP', 'Framer Motion', 'Drizzle ORM', 'Neon DB', 'Clerk'];
+const imageBasedSkills = ['GSAP', 'Framer Motion', 'Drizzle ORM', 'Clerk'];
 
 // Helper function to get icon for LogoLoop (with different color scheme)
 const getSkillIconForLoop = (skillName: string): React.ReactNode => {
@@ -161,7 +160,6 @@ const skillUrlMap: Record<string, string> = {
   'MongoDB': 'https://www.mongodb.com',
   'PostgreSQL': 'https://www.postgresql.org',
   'Drizzle ORM': 'https://orm.drizzle.team',
-  'Neon DB': 'https://neon.tech',
   'AWS': 'https://aws.amazon.com',
   'Stripe': 'https://stripe.com',
   'Clerk': 'https://clerk.com',
@@ -199,6 +197,28 @@ export default function Skills() {
   useEffect(() => {
     tabRefs.current = [frontendTabRef.current, backendTabRef.current, toolTabRef.current];
   }, [frontendTabRef, backendTabRef, toolTabRef]);
+
+  // Prevent body scroll when overlay is open
+  useEffect(() => {
+    if (isOverlayOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      // Apply styles to prevent scrolling
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore scroll position when overlay closes
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [isOverlayOpen]);
 
   // Animate skills heading on scroll
   useEffect(() => {
@@ -515,7 +535,7 @@ export default function Skills() {
       {isOverlayOpen && activeTab && (
         <div
           ref={overlayRef}
-          className="fixed inset-0 z-[100] bg-[#e8defa] text-[#1a1a1a]"
+          className="fixed inset-0 z-[100] bg-[#e8defa] text-[#1a1a1a] overflow-y-auto"
         >
           {/* Scattered animated tech logos */}
           {skillsData[activeTab].map((skill, index) => {
@@ -574,7 +594,7 @@ export default function Skills() {
               </button>
             </div>
 
-            <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20">
+            <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20 overflow-y-auto">
               <h3 className="overlay-title text-6xl md:text-8xl font-serif italic tracking-wide mb-12 md:mb-16 text-center text-[#1a1a1a]">
                 {categoryLabels[activeTab].toUpperCase()}
               </h3>

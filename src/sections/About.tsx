@@ -1,8 +1,7 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrollFloat from "@/components/bits/ScrollFloat";
-import SplitTextLines from "@/components/bits/SplitTextLines";
 import PixelTransition from "@/components/bits/PixelTransition";
 import { useScrollCardReveal } from "@/components/bits/useScrollCardReveal";
 
@@ -44,6 +43,7 @@ const aboutSections = [
 export default function About() {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const aboutSectionRef = useRef<HTMLElement>(null);
+  const rightParagraphRef = useRef<HTMLParagraphElement>(null);
 
   // Use the scroll card reveal hook for animations
   useScrollCardReveal(sectionRefs, {
@@ -60,6 +60,46 @@ export default function About() {
       { x: 40, y: 30 },
     ],
   });
+
+  // Animate right paragraph text with the same effect as expertise text in Experience
+  useEffect(() => {
+    const el = rightParagraphRef.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+
+    gsap.fromTo(
+      el,
+      {
+        opacity: isInViewport ? 1 : 0,
+        y: isInViewport ? 0 : 20,
+        clipPath: isInViewport ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
+      },
+      {
+        opacity: 1,
+        y: 0,
+        clipPath: 'inset(0% 0% 0% 0%)',
+        duration: 2,
+        ease: 'power1.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          end: 'top 50%',
+          scrub: true,
+          immediateRender: isInViewport,
+        },
+      }
+    );
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars.trigger === el) {
+          trigger.kill();
+        }
+      });
+    };
+  }, []);
 
   return (
     <section
@@ -95,7 +135,7 @@ export default function About() {
             </div>
             
             {/* Rectangular Image Placeholder */}
-            <div className="mt-8 w-full max-w-md group">
+            <div className="mt-8 w-full max-w-md group ">
               <PixelTransition
                 firstContent={
                   <div className="w-full h-[200px] sm:h-[240px] lg:h-[280px] flex items-center justify-center text-[#2D5016] bg-[#E8E6E1] rounded-lg border border-[#2D5016]/10">
@@ -128,17 +168,12 @@ export default function About() {
 
           {/* Right Side - Small Paragraph Text */}
           <div className="mt-10 lg:mt-0 lg:max-w-md xl:max-w-lg lg:text-right">
-            <SplitTextLines
+            <p
+              ref={rightParagraphRef}
               className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-serif text-[#2D5016] leading-[1.3] tracking-tight"
-              duration={1.5}
-              stagger={0.1}
-              ease="power4"
-              scrollStart="top 70%"
-              scrollEnd="top 30%"
-              triggerElement={aboutSectionRef}
             >
               I'M MOST INSPIRED BY TECHNOLOGY, PROBLEM-SOLVING AND CREATIVE CODING. I CAN'T IMAGINE MY LIFE WITHOUT BUILDING MEANINGFUL DIGITAL EXPERIENCES.
-            </SplitTextLines>
+            </p>
             <div className="flex items-center gap-3 mt-5 lg:justify-end">
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
               <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">***</div>
@@ -187,7 +222,7 @@ export default function About() {
               ref={(el) => {
                 sectionRefs.current[index] = el;
               }}
-              className="absolute hidden lg:block group"
+              className="absolute hidden lg:block"
               style={{
                 top: section.position.top,
                 left: section.position.left,
@@ -196,12 +231,11 @@ export default function About() {
                 maxWidth: section.position.maxWidth,
               }}
             >
-              <div className="section-content flex gap-4 items-start p-5 rounded-xl hover:bg-white/40 transition-all duration-300">
+              <div className="section-content flex gap-4 items-start p-5 rounded-xl">
                 <div className="shrink-0 relative">
-                  <span className="text-3xl font-extralight text-[#2D5016]/20 group-hover:text-[#2D5016]/40 transition-colors duration-300">
+                  <span className="text-3xl font-extralight text-[#2D5016]/20">
                     {section.number}
                   </span>
-                  <div className="absolute -bottom-1 left-0 h-[1px] w-0 bg-[#2D5016] group-hover:w-full transition-all duration-500"></div>
                 </div>
                 <div>
                   <h3 className="text-[11px] font-semibold text-[#2D5016] mb-3 tracking-[0.15em] uppercase">
@@ -223,7 +257,7 @@ export default function About() {
                 ref={(el) => {
                   sectionRefs.current[index + 5] = el;
                 }}
-                className="section-content flex gap-4 p-5 rounded-xl bg-white/30 hover:bg-white/50 transition-all duration-300"
+                className="section-content flex gap-4 p-5 rounded-xl"
               >
                 <div className="shrink-0">
                   <span className="text-3xl font-extralight text-[#2D5016]/20">

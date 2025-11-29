@@ -116,7 +116,6 @@ export const SKILLS: Skill[] = [
   { name: 'Postman', category: 'tool', level: 'advanced' },
   { name: 'MongoDB', category: 'tool', level: 'advanced' },
   { name: 'Drizzle ORM', category: 'tool', level: 'intermediate' },
-  { name: 'Neon DB', category: 'tool', level: 'intermediate' },
   { name: 'AWS', category: 'tool', level: 'intermediate' },
   { name: 'Stripe', category: 'tool', level: 'intermediate' },
   { name: 'Clerk', category: 'tool', level: 'intermediate' },

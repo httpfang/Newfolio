@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Footer, Loader } from '@/layout';
+import { Loader } from '@/layout';
 import {
   Hero,
   About,
@@ -55,7 +55,6 @@ function App() {
             <ExperienceSection />
             <Contact />
           </main>
-          <Footer />
         </div>
       </div>
     </>
