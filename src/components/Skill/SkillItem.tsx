@@ -127,7 +127,7 @@ export default function SkillItem({ skill }: SkillItemProps) {
     <>
       <div
         ref={itemRef}
-        className="skill-item p-6 md:p-8 rounded-lg border border-black/10 bg-white/50 backdrop-blur-sm relative"
+        className="skill-item p-5 rounded-[12px] border border-black/10 bg-white/50 backdrop-blur-sm relative"
         style={{
           boxShadow: '0 2px 8px rgba(26, 26, 26, 0.04), 0 4px 16px rgba(26, 26, 26, 0.02)',
         }}
@@ -163,7 +163,7 @@ export default function SkillItem({ skill }: SkillItemProps) {
       {isHovered && (
         <div
           ref={logoContainerRef}
-          className="fixed z-[101] pointer-events-none"
+          className="fixed z-[10000] pointer-events-none"
           style={{
             willChange: 'transform',
             transformOrigin: 'center center',

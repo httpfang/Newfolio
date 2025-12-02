@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { PERSONAL_INFO } from "@/constants/constants";
 import SkillItem from "./SkillItem";
@@ -117,10 +118,24 @@ export default function SkillOverlay({
 
   if (!isOpen || !category) return null;
 
-  return (
+  const overlayContent = (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[100] bg-[#e8defa] text-[#1a1a1a] overflow-y-auto"
+      className="fixed inset-0 text-[#1a1a1a] overflow-y-auto"
+      style={{ 
+        isolation: 'isolate',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 9999,
+        backgroundColor: '#e8defa',
+        background: '#e8defa',
+        willChange: 'opacity',
+      }}
     >
       <div className="relative flex flex-col h-full">
         <div className="flex items-center justify-between px-6 py-4 border-b border-black/10">
@@ -168,5 +183,8 @@ export default function SkillOverlay({
       </div>
     </div>
   );
+
+  // Render overlay using portal to document.body to escape any stacking context issues
+  return typeof window !== 'undefined' ? createPortal(overlayContent, document.body) : null;
 }
 
