@@ -1,52 +1,60 @@
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ChevronDown, Check, RefreshCw, Clock } from 'lucide-react';
-import ScrollFloat from '@/bits/ScrollFloat';
-import { useScrollCardReveal } from '@/bits/useScrollCardReveal';
-import LightRays from '@/bits/LightRays.bg';
-import { EXPERIENCES } from '@/constants/constants';
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronDown, Check, RefreshCw, Clock } from "lucide-react";
+import ScrollFloat from "@/bits/ScrollFloat";
+import { useScrollCardReveal } from "@/bits/useScrollCardReveal";
+import LightRays from "@/bits/LightRays.bg";
+import { EXPERIENCES } from "@/constants/constants";
 
 gsap.registerPlugin(ScrollTrigger);
 
 // Helper function to format date
-const formatDateRange = (startDate: string | undefined, endDate: string | undefined) => {
-  if (!startDate || !endDate) return '2025-2025';
-  const startYear = startDate.split('-')[0];
-  const endYear = endDate.split('-')[0];
+const formatDateRange = (
+  startDate: string | undefined,
+  endDate: string | undefined
+) => {
+  if (!startDate || !endDate) return "2025-2025";
+  const startYear = startDate.split("-")[0];
+  const endYear = endDate.split("-")[0];
   return `${startYear}-${endYear}`;
 };
 
 const formatMonth = (dateStr: string | undefined) => {
-  if (!dateStr) return 'Jan';
-  return new Date(dateStr + '-01').toLocaleDateString('en-US', { month: 'short' });
+  if (!dateStr) return "Jan";
+  return new Date(dateStr + "-01").toLocaleDateString("en-US", {
+    month: "short",
+  });
 };
 
 // Experience data
 const experienceData = [
   {
     id: 1,
-    title: 'Certified Chaos Curator',
-    subtitle: 'brand identity, tasteful havoc, brainrot',
-    dateRange: '2016-Present',
-    startMonth: 'Jan',
-    endMonth: 'Present',
+    title: "Certified Chaos Curator",
+    subtitle: "brand identity, tasteful havoc, brainrot",
+    dateRange: "2016-Present",
+    startMonth: "Jan",
+    endMonth: "Present",
     isCurrent: true,
   },
   {
     id: 2,
-    title: EXPERIENCES[0]?.title || 'Full Stack Developer Intern',
-    company: EXPERIENCES[0]?.company || '1StopKyc',
-    dateRange: '2025-Present',
-    startMonth: 'Jan',
-    endMonth: 'Present',
+    title: EXPERIENCES[0]?.title || "Full Stack Developer Intern",
+    company: EXPERIENCES[0]?.company || "1StopKyc",
+    dateRange: "2025-Present",
+    startMonth: "Jan",
+    endMonth: "Present",
     isCurrent: true,
   },
   {
     id: 3,
-    title: EXPERIENCES[1]?.title || 'Frontend Developer',
-    company: EXPERIENCES[1]?.company || 'Skepsi',
-    dateRange: formatDateRange(EXPERIENCES[1]?.startDate, EXPERIENCES[1]?.endDate),
+    title: EXPERIENCES[1]?.title || "Frontend Developer",
+    company: EXPERIENCES[1]?.company || "Skepsi",
+    dateRange: formatDateRange(
+      EXPERIENCES[1]?.startDate,
+      EXPERIENCES[1]?.endDate
+    ),
     startMonth: formatMonth(EXPERIENCES[1]?.startDate),
     endMonth: formatMonth(EXPERIENCES[1]?.endDate),
     isCurrent: false,
@@ -54,40 +62,51 @@ const experienceData = [
 ];
 
 const expertiseData = {
-  description: 'Brainrot talks, yapper ( really ), Solo Trveler, fridge magnets, sleep cycle ( crying), J session',
+  description:
+    "Brainrot talks, yapper ( really ), Solo Trveler, fridge magnets, sleep cycle ( crying), J session",
   hardSkills: {
-    imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop',
-    software: ['Ai', 'Ps', 'Ae', 'Id', 'Figma', 'Blender'],
+    imageUrl:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
   },
-  softSkills: ['Creativity', 'Teamwork', 'Time_Management', 'Flexibility', 'Communication'],
+  softSkills: [
+    "Creativity",
+    "Teamwork",
+    "Time_Management",
+    "Flexibility",
+    "Communication",
+  ],
 };
 
 const educationData = [
   {
     id: 1,
-    title: 'BTech CSE',
-    institution: 'Lovely Professional University',
-    dateRange: '2022-26',
+    title: "BTech CSE",
+    institution: "Lovely Professional University",
+    dateRange: "2022-26",
     isCompleted: false,
   },
   {
     id: 2,
-    title: 'Schooling',
-    institution: 'DAV Public School Kota',
-    dateRange: '2016-2021',
+    title: "Schooling",
+    institution: "DAV Public School Kota",
+    dateRange: "2016-2021",
     isCompleted: true,
   },
   {
     id: 3,
-    title: 'Learning from life and Youtube',
-    institution: 'Life',
-    dateRange: '2022-Present',
+    title: "Learning from life and Youtube",
+    institution: "Life",
+    dateRange: "2022-Present",
     isCompleted: false,
   },
 ];
 
 // Experience Card Component
-function ExperienceCard({ experience }: { experience: typeof experienceData[0] }) {
+function ExperienceCard({
+  experience,
+}: {
+  experience: (typeof experienceData)[0];
+}) {
   return (
     <div className="relative bg-white/10 backdrop-blur-sm rounded-[12px] p-5 mb-4 shadow-[0_2px_8px_rgba(255,255,255,0.1)] border border-white/10 section-content">
       {/* Status Icon - Top Right */}
@@ -118,16 +137,24 @@ function ExperienceCard({ experience }: { experience: typeof experienceData[0] }
 
       {/* Timeline */}
       <div className="flex items-center gap-3 mt-4 pt-4 border-t border-white/20">
-        <span className="text-xs text-white/70 font-medium">{experience.startMonth}</span>
+        <span className="text-xs text-white/70 font-medium">
+          {experience.startMonth}
+        </span>
         <div className="flex-1 h-[2px] bg-white/30"></div>
-        <span className="text-xs text-white/70 font-medium">{experience.endMonth}</span>
+        <span className="text-xs text-white/70 font-medium">
+          {experience.endMonth}
+        </span>
       </div>
     </div>
   );
 }
 
 // Education Card Component
-function EducationCard({ education }: { education: typeof educationData[0] }) {
+function EducationCard({
+  education,
+}: {
+  education: (typeof educationData)[0];
+}) {
   return (
     <div className="relative bg-[#1a1a1a] rounded-[12px] p-5 mb-4 shadow-[0_2px_8px_rgba(0,0,0,0.15)] section-content">
       {/* Checkmark Icon - Top Right */}
@@ -143,7 +170,9 @@ function EducationCard({ education }: { education: typeof educationData[0] }) {
       </div>
 
       {/* Institution */}
-      <p className="text-sm text-white/90 mb-2 font-medium">{education.institution}</p>
+      <p className="text-sm text-white/90 mb-2 font-medium">
+        {education.institution}
+      </p>
 
       {/* Title */}
       <h3 className="text-[15px] font-semibold text-white mb-2 pr-10 leading-tight">
@@ -169,18 +198,18 @@ function SectionHeader({ title }: { title: string }) {
       {
         opacity: isInViewport ? 1 : 0,
         y: isInViewport ? 0 : 30,
-        filter: isInViewport ? 'blur(0px)' : 'blur(4px)',
+        filter: isInViewport ? "blur(0px)" : "blur(4px)",
       },
       {
         opacity: 1,
         y: 0,
-        filter: 'blur(0px)',
+        filter: "blur(0px)",
         duration: 2,
-        ease: 'power1.out',
+        ease: "power1.out",
         scrollTrigger: {
           trigger: el,
-          start: 'top 95%',
-          end: 'top 50%',
+          start: "top 95%",
+          end: "top 50%",
           scrub: true,
           immediateRender: isInViewport,
         },
@@ -198,7 +227,9 @@ function SectionHeader({ title }: { title: string }) {
 
   return (
     <div ref={headerRef} className="flex items-center gap-2 mb-6">
-      <h2 className="text-3xl lg:text-4xl font-serif text-white tracking-tight">{title}</h2>
+      <h2 className="text-3xl lg:text-4xl font-serif text-white tracking-tight">
+        {title}
+      </h2>
       <ChevronDown className="w-5 h-5 text-white/60" strokeWidth={2} />
     </div>
   );
@@ -225,11 +256,11 @@ function SubsectionHeader({ title }: { title: string }) {
         opacity: 1,
         x: 0,
         duration: 2,
-        ease: 'power1.out',
+        ease: "power1.out",
         scrollTrigger: {
           trigger: el,
-          start: 'top 95%',
-          end: 'top 50%',
+          start: "top 95%",
+          end: "top 50%",
           scrub: true,
           immediateRender: isInViewport,
         },
@@ -268,11 +299,11 @@ export default function ExperienceSection() {
       { x: 30, y: 50, rotate: 2, scale: 0.9 },
       { x: -30, y: 50, rotate: -2, scale: 0.9 },
     ],
-    start: 'top 95%',
-    end: 'top 30%',
+    start: "top 95%",
+    end: "top 30%",
     duration: 2.5,
-    ease: 'power1.out',
-    contentSelector: '.section-content',
+    ease: "power1.out",
+    contentSelector: ".section-content",
   });
 
   // Animate education cards
@@ -282,11 +313,11 @@ export default function ExperienceSection() {
       { x: -35, y: 50, rotate: -2, scale: 0.9 },
       { x: 30, y: 50, rotate: 2, scale: 0.9 },
     ],
-    start: 'top 95%',
-    end: 'top 30%',
+    start: "top 95%",
+    end: "top 30%",
     duration: 2.5,
-    ease: 'power1.out',
-    contentSelector: '.section-content',
+    ease: "power1.out",
+    contentSelector: ".section-content",
   });
 
   // Animate expertise description text
@@ -302,18 +333,18 @@ export default function ExperienceSection() {
       {
         opacity: isInViewport ? 1 : 0,
         y: isInViewport ? 0 : 20,
-        clipPath: isInViewport ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
+        clipPath: isInViewport ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
       },
       {
         opacity: 1,
         y: 0,
-        clipPath: 'inset(0% 0% 0% 0%)',
+        clipPath: "inset(0% 0% 0% 0%)",
         duration: 2,
-        ease: 'power1.out',
+        ease: "power1.out",
         scrollTrigger: {
           trigger: el,
-          start: 'top 90%',
-          end: 'top 50%',
+          start: "top 90%",
+          end: "top 50%",
           scrub: true,
           immediateRender: isInViewport,
         },
@@ -349,11 +380,11 @@ export default function ExperienceSection() {
         scale: 1,
         y: 0,
         duration: 2.5,
-        ease: 'power1.out',
+        ease: "power1.out",
         scrollTrigger: {
           trigger: el,
-          start: 'top 95%',
-          end: 'top 40%',
+          start: "top 95%",
+          end: "top 40%",
           scrub: true,
           immediateRender: isInViewport,
         },
@@ -374,7 +405,7 @@ export default function ExperienceSection() {
     const el = softSkillsRef.current;
     if (!el) return;
 
-    const tags = el.querySelectorAll('span');
+    const tags = el.querySelectorAll("span");
     if (tags.length === 0) return;
 
     const rect = el.getBoundingClientRect();
@@ -392,12 +423,12 @@ export default function ExperienceSection() {
         scale: 1,
         y: 0,
         duration: 1.5,
-        ease: 'power1.out',
+        ease: "power1.out",
         stagger: 0.15,
         scrollTrigger: {
           trigger: el,
-          start: 'top 95%',
-          end: 'top 50%',
+          start: "top 95%",
+          end: "top 50%",
           scrub: true,
           immediateRender: isInViewport,
         },
@@ -417,13 +448,13 @@ export default function ExperienceSection() {
   const getCurrentDateTime = () => {
     const now = new Date();
     const options: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     };
-    return now.toLocaleDateString('en-US', options);
+    return now.toLocaleDateString("en-US", options);
   };
 
   return (
@@ -455,7 +486,7 @@ export default function ExperienceSection() {
         className="absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)`,
-          backgroundSize: '60px 60px',
+          backgroundSize: "60px 60px",
         }}
       />
 
@@ -506,7 +537,7 @@ export default function ExperienceSection() {
           {/* Column 2: Expertise */}
           <div className="flex flex-col">
             <SectionHeader title="Expertise" />
-            
+
             {/* Expertise Description */}
             <div className="mb-8">
               <p
@@ -528,7 +559,7 @@ export default function ExperienceSection() {
                     src={expertiseData.hardSkills.imageUrl}
                     alt="Professional workspace setup showing laptop, smartphone, notebook, and desk accessories"
                     className="w-full h-full object-cover object-center grayscale"
-                    style={{ width: '100%', height: '100%' }}
+                    style={{ width: "100%", height: "100%" }}
                   />
                 </div>
               </div>
@@ -539,14 +570,16 @@ export default function ExperienceSection() {
               <SubsectionHeader title="Softskill" />
               <div ref={softSkillsRef} className="flex flex-wrap gap-2">
                 {expertiseData.softSkills.map((skill, index) => {
-                  const isBlue = index === 0 || index === expertiseData.softSkills.length - 1;
+                  const isBlue =
+                    index === 0 ||
+                    index === expertiseData.softSkills.length - 1;
                   return (
                     <span
                       key={index}
                       className={`inline-block px-4 py-2 rounded-full text-xs font-semibold ${
                         isBlue
-                          ? 'bg-[#3B82F6] text-white'
-                          : 'bg-white/10 text-white border border-white/20 backdrop-blur-sm'
+                          ? "bg-[#3B82F6] text-white"
+                          : "bg-white/10 text-white border border-white/20 backdrop-blur-sm"
                       }`}
                     >
                       #{skill}

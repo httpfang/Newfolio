@@ -427,21 +427,33 @@ export default function Hero() {
 
               {/* Bottom socials */}
               <div className="grid grid-cols-4 border-t border-black/10">
-                {["Instagram", "LinkedIn", "Behance", "Dribbble"].map(
-                  (name, idx) => (
-                    <a
-                      key={name}
-                      href="#"
-                      className={cn(
-                        "overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-black/10",
-                        idx !== 3 && "border-r"
-                      )}
-                      onClick={(e) => e.preventDefault()}
-                    >
-                      {name}
-                    </a>
-                  )
-                )}
+                <a
+                  href="https://www.linkedin.com/in/harsh-verma-develop/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-black/10 border-r"
+                >
+                  LinkedIn
+                </a>
+                <a
+                  href="https://www.instagram.com/fanggore/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-black/10 border-r"
+                >
+                  Instagram
+                </a>
+                <a
+                  href="https://x.com/fanghttp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-black/10 border-r"
+                >
+                  Twitter
+                </a>
+                <div className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider">
+                  enough broo!!!
+                </div>
               </div>
             </div>
           </div>
