@@ -54,7 +54,7 @@ const experienceData = [
 ];
 
 const expertiseData = {
-  description: 'Brainrot talks, yapper ( really😘 ), Solo Trveler, fridge magnets, sleep cycle (🥹), J session (👀)',
+  description: 'Brainrot talks, yapper ( really ), Solo Trveler, fridge magnets, sleep cycle ( crying), J session',
   hardSkills: {
     imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop',
     software: ['Ai', 'Ps', 'Ae', 'Id', 'Figma', 'Blender'],
