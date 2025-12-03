@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrollFloat from "@/bits/ScrollFloat";
 import { useScrollCardReveal } from "@/bits/useScrollCardReveal";
 import Skills from "../Skill/Skills";
+import { FaLocationArrow } from "react-icons/fa";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,6 +28,7 @@ interface GitHubRepo {
   name: string;
   description: string | null;
   html_url: string;
+  homepage: string | null;
   language: string | null;
   stargazers_count: number;
   forks_count: number;
@@ -522,12 +524,36 @@ export default function Projects() {
                 ref={(el) => {
                   cardsRef.current[index] = el;
                 }}
-                className="repo-card-inner font-mono translate-x-[-6px] translate-y-[-6px] bg-[#ff66a3] border-[3px] border-black shadow-[12px_12px_0_#000000] overflow-hidden transition-all duration-300 hover:translate-x-[-6px] hover:translate-y-0"
+                className="repo-card-inner font-mono translate-x-[-6px] translate-y-[-6px] bg-[#ff66a3] border-[3px] border-black shadow-[12px_12px_0_#000000] overflow-visible transition-all duration-300 hover:translate-x-[-6px] hover:translate-y-0"
               >
-                <div className="w-full h-8 bg-white border-b-[3px] border-black flex items-center px-3">
-                  <h3 className="text-sm font-black text-black line-clamp-1">
+                <div className="w-full h-8 bg-white border-b-[3px] border-black flex items-center justify-between px-3 relative overflow-visible">
+                  <h3 className="text-sm font-black text-black line-clamp-1 flex-1">
                       {repo.name}
                     </h3>
+                  {repo.homepage && (
+                    <a
+                      href={repo.homepage}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative group ml-2 shrink-0 z-20"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (repo.homepage) {
+                          window.open(repo.homepage, "_blank", "noopener,noreferrer");
+                        }
+                      }}
+                    >
+                      <div className="w-5 h-5 border-2 border-black bg-white shadow-[2px_2px_0_#000000] transition-all duration-200 hover:translate-x-px hover:translate-y-px hover:shadow-[1px_1px_0_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0_0_0_#000000] flex items-center justify-center">
+                        <FaLocationArrow className="w-3 h-3 text-black" />
+                      </div>
+                      {/* Tooltip */}
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-black text-white text-[10px] px-2 py-1 rounded border border-black shadow-[2px_2px_0_#000000] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                        View Live
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                      </div>
+                    </a>
+                  )}
                 </div>
                 <div className="p-3 text-sm font-semibold text-black">
                   <p className="mb-3 line-clamp-2 min-h-[40px]">
