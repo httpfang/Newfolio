@@ -469,7 +469,7 @@ export default function Hero() {
           {/* Content wrapper - positioned below image on mobile, absolute on desktop */}
           <div className="relative mt-8 sm:mt-10 md:mt-[280px] lg:mt-[320px]">
             {/* Headline */}
-            <h1 className="text-[#1C1B1A] font-black tracking-tight leading-[1.1] text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="text-[#1C1B1A] font-black tracking-tight leading-[1.3] sm:leading-[1.1] text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
               <SplitText
                 text="Overclocked & emotionally"
                 className="block"
