@@ -105,7 +105,7 @@ export default function About() {
     <section
       ref={aboutSectionRef}
       id="about"
-      className="mt-[70px] pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F5F3EE] relative overflow-hidden"
+      className="mt-0 sm:mt-[50px] md:mt-[70px] pt-8 sm:pt-10 md:pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F5F3EE] relative overflow-hidden"
     >
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
@@ -115,7 +115,7 @@ export default function About() {
       
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Title */}
-        <div className="mb-12 lg:mb-16 lg:flex lg:items-start lg:justify-between lg:gap-12">
+        <div className="mb-8 sm:mb-10 md:mb-12 lg:mb-16 lg:flex lg:items-start lg:justify-between lg:gap-12">
           <div className="flex-1">
             <ScrollFloat
               animationDuration={1}
@@ -128,14 +128,14 @@ export default function About() {
             >
               ABOUT ME
             </ScrollFloat>
-            <div className="flex items-center gap-3 mt-4">
+            <div className="flex items-center gap-3 mt-3 sm:mt-4">
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
               <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">***</div>
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
             </div>
             
             {/* Rectangular Image Placeholder */}
-            <div className="mt-8 w-full max-w-md group ">
+            <div className="mt-6 sm:mt-8 w-full max-w-md group ">
               <PixelTransition
                 firstContent={
                   <div className="w-full h-[200px] sm:h-[240px] lg:h-[280px] flex items-center justify-center text-[#2D5016] bg-[#E8E6E1] rounded-lg border border-[#2D5016]/10">
@@ -167,14 +167,14 @@ export default function About() {
           </div>
 
           {/* Right Side - Small Paragraph Text */}
-          <div className="mt-10 lg:mt-0 lg:max-w-md xl:max-w-lg lg:text-right">
+          <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-0 lg:max-w-md xl:max-w-lg lg:text-right">
             <p
               ref={rightParagraphRef}
               className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-serif text-[#2D5016] leading-[1.3] tracking-tight"
             >
               I'M MOST INSPIRED BY TECHNOLOGY, PROBLEM-SOLVING AND CREATIVE CODING. I CAN'T IMAGINE MY LIFE WITHOUT BUILDING MEANINGFUL DIGITAL EXPERIENCES.
             </p>
-            <div className="flex items-center gap-3 mt-5 lg:justify-end">
+            <div className="flex items-center gap-3 mt-4 sm:mt-5 lg:justify-end">
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
               <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">***</div>
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
@@ -250,7 +250,7 @@ export default function About() {
           ))}
 
           {/* Mobile/Tablet Layout - Stacked */}
-          <div className="lg:hidden space-y-6">
+          <div className="lg:hidden space-y-4 sm:space-y-5 md:space-y-6">
             {aboutSections.map((section, index) => (
               <div
                 key={section.number}
@@ -314,7 +314,7 @@ export default function About() {
           </div>
 
           {/* Mobile Image */}
-          <div className="lg:hidden mx-auto my-12 max-w-[280px]">
+          <div className="lg:hidden mx-auto my-8 sm:my-10 md:my-12 max-w-[280px]">
             <PixelTransition
               firstContent={
                 <div className="w-[280px] h-[420px] flex items-center justify-center text-[#2D5016] rounded-3xl bg-[#E8E6E1] border border-[#2D5016]/10">

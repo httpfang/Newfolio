@@ -127,7 +127,7 @@ export default function SkillItem({ skill }: SkillItemProps) {
     <>
       <div
         ref={itemRef}
-        className="skill-item p-5 rounded-[12px] border border-black/10 bg-white/50 backdrop-blur-sm relative"
+        className="skill-item p-4 sm:p-5 rounded-[12px] border border-black/10 bg-white/50 backdrop-blur-sm relative touch-manipulation"
         style={{
           boxShadow: '0 2px 8px rgba(26, 26, 26, 0.04), 0 4px 16px rgba(26, 26, 26, 0.02)',
         }}
@@ -153,8 +153,28 @@ export default function SkillItem({ skill }: SkillItemProps) {
             overwrite: 'auto',
           });
         }}
+        onTouchStart={(e) => {
+          setIsHovered(true);
+          gsap.to(e.currentTarget, {
+            scale: 1.02,
+            y: -2,
+            duration: 0.2,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          });
+        }}
+        onTouchEnd={(e) => {
+          setIsHovered(false);
+          gsap.to(e.currentTarget, {
+            scale: 1,
+            y: 0,
+            duration: 0.2,
+            ease: 'power2.inOut',
+            overwrite: 'auto',
+          });
+        }}
       >
-        <span className="text-xl md:text-2xl font-medium text-[#1a1a1a] tracking-tight">
+        <span className="text-lg sm:text-xl md:text-2xl font-medium text-[#1a1a1a] tracking-tight">
           {skill}
         </span>
       </div>
@@ -173,8 +193,8 @@ export default function SkillItem({ skill }: SkillItemProps) {
             className={cn(
               "flex items-center justify-center",
               isImageBased 
-                ? "w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24" 
-                : "text-5xl md:text-6xl lg:text-7xl"
+                ? "w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24" 
+                : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
             )}
             style={{
               color: '#1a1a1a',

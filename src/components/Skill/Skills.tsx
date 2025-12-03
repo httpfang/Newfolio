@@ -203,8 +203,8 @@ export default function Skills() {
     <>
       {/* Skills Section */}
       <div id="skills" className="mt-20 scroll-mt-[70px]">
-        <div ref={skillsHeadingRef} className="mb-16">
-          <div className="flex items-center gap-6 md:gap-8 mb-4">
+        <div ref={skillsHeadingRef} className="mb-12 sm:mb-14 md:mb-16 px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 md:gap-8 mb-4">
             <ScrollFloat
               animationDuration={1}
               ease="back.inOut(2)"
@@ -212,11 +212,11 @@ export default function Skills() {
               scrollEnd="bottom bottom-=40%"
               stagger={0.03}
               containerClassName="my-0"
-              textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
+              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
             >
               SKILLS
             </ScrollFloat>
-            <div className="flex-1 h-[60px] md:h-[80px] relative overflow-hidden">
+            <div className="flex-1 w-full sm:w-auto h-[50px] sm:h-[60px] md:h-[80px] relative overflow-hidden">
               <LogoLoop
                 logos={techLogos}
                 speed={80}
@@ -232,9 +232,9 @@ export default function Skills() {
               />
             </div>
           </div>
-          <div className="divider-container flex items-center gap-3 mt-4">
-            <div className="h-px w-12 bg-[#2D5016] opacity-30"></div>
-            <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">
+          <div className="divider-container flex items-center gap-2 sm:gap-3 mt-4">
+            <div className="h-px w-8 sm:w-12 bg-[#2D5016] opacity-30"></div>
+            <div className="text-[#2D5016] text-xs sm:text-sm opacity-40 tracking-[0.2em] sm:tracking-[0.3em]">
               TECHNOLOGIES
             </div>
             <div className="flex-1 h-px bg-[#2D5016] opacity-30"></div>
@@ -242,8 +242,8 @@ export default function Skills() {
         </div>
 
         {/* Skills Array Display */}
-        <div className="flex items-center justify-center w-full mt-8 md:mt-12 px-4">
-          <div className="flex items-center gap-2 md:gap-4 font-mono text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#2D5016]">
+        <div className="flex items-center justify-center w-full mt-6 sm:mt-8 md:mt-12 px-4 sm:px-6">
+          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 font-mono text-xl sm:text-2xl md:text-4xl lg:text-5xl text-[#2D5016] flex-wrap justify-center">
             <span className="text-[#2D5016]/60">[</span>
             {skillCategories.map((category, index) => {
               const refMap = {
@@ -260,9 +260,9 @@ export default function Skills() {
                     onClick={() => openOverlay(category)}
                     className={cn(
                       'font-serif italic tracking-wide text-[#2D5016] cursor-pointer',
-                      'hover:text-[#2D5016]/70 transition-colors duration-300',
-                      'select-none relative z-10',
-                      'text-2xl sm:text-3xl md:text-4xl lg:text-5xl'
+                      'hover:text-[#2D5016]/70 active:scale-95 transition-colors duration-300',
+                      'select-none relative z-10 touch-manipulation',
+                      'text-xl sm:text-2xl md:text-4xl lg:text-5xl'
                     )}
                     style={{
                       transform: `rotate(${TAB_ROTATIONS[index]}deg)`,
@@ -284,7 +284,7 @@ export default function Skills() {
                     />
                   </button>
                   {index < skillCategories.length - 1 && (
-                    <span className="text-[#2D5016]/60 mx-2 md:mx-4">,</span>
+                    <span className="text-[#2D5016]/60 mx-1 sm:mx-2 md:mx-4">,</span>
                   )}
                 </span>
               );
@@ -305,4 +305,5 @@ export default function Skills() {
     </>
   );
 }
+
 

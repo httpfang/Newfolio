@@ -138,13 +138,13 @@ export default function SkillOverlay({
       }}
     >
       <div className="relative flex flex-col h-full">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-black/10">
-          <span className="text-xs tracking-widest uppercase font-serif text-[#1a1a1a]">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-black/10">
+          <span className="text-xs sm:text-sm tracking-widest uppercase font-serif text-[#1a1a1a]">
             {PERSONAL_INFO.name || 'Portfolio'}
           </span>
           <button
             aria-label="Close skills overlay"
-            className="close-btn text-3xl leading-none bg-transparent hover:bg-transparent font-serif text-[#1a1a1a]"
+            className="close-btn text-2xl sm:text-3xl leading-none bg-transparent hover:bg-transparent font-serif text-[#1a1a1a] touch-manipulation active:scale-95 transition-transform"
             onClick={handleClose}
             onMouseEnter={(e) => {
               gsap.to(e.currentTarget, {
@@ -169,12 +169,12 @@ export default function SkillOverlay({
           </button>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20 overflow-y-auto">
-          <h3 className="overlay-title text-6xl md:text-8xl font-serif italic tracking-wide mb-12 md:mb-16 text-center text-[#1a1a1a]">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 md:py-20 overflow-y-auto">
+          <h3 className="overlay-title text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-serif italic tracking-wide mb-8 sm:mb-12 md:mb-16 text-center text-[#1a1a1a] px-4">
             {categoryLabel.toUpperCase()}
           </h3>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-4xl w-full px-2 sm:px-0">
             {skills.map((skill) => (
               <SkillItem key={skill} skill={skill} />
             ))}
@@ -187,4 +187,7 @@ export default function SkillOverlay({
   // Render overlay using portal to document.body to escape any stacking context issues
   return typeof window !== 'undefined' ? createPortal(overlayContent, document.body) : null;
 }
+
+
+
 
