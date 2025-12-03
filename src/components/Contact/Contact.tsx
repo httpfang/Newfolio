@@ -254,12 +254,27 @@ export default function Contact() {
             grid-template-columns: 1fr;
           }
         }
+
+        .tilted-card-wrapper {
+          transform: scale(0.737);
+          transform-origin: center;
+          margin: 0 auto;
+          width: fit-content;
+          display: block;
+        }
+
+        @media (min-width: 768px) {
+          .tilted-card-wrapper {
+            transform: scale(1);
+            margin: 0;
+          }
+        }
       `}</style>
 
       <div className="max-w-7xl mx-auto">
         {/* Title - Centered */}
         <div ref={titleRef} className="reveal-element mb-20 text-center">
-          <h1 className="text-7xl md:text-8xl lg:text-9xl font-bold">
+          <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold">
             Contact me
           </h1>
         </div>
@@ -283,7 +298,8 @@ export default function Contact() {
                 </p>
               </div>
 
-              <div className="mt-15">
+              <div className="mt-15 hidden md:flex justify-center items-center w-full md:justify-start">
+                <div className="tilted-card-wrapper">
                 <TiltedCard
                   imageSrc="https://media.licdn.com/dms/image/v2/D5603AQEMnSYb1oo-UQ/profile-displayphoto-scale_200_200/B56Zfn.oG6GQAg-/0/1751943646266?e=1766016000&v=beta&t=V5kgTuD_LcAmH-9SBXkCh_IKxR24HDnz6EUXsspMaPE"
                   altText="Harsh verma - GNX Album Cover"
@@ -298,11 +314,12 @@ export default function Contact() {
                   showTooltip={true}
                   displayOverlayContent={true}
                   overlayContent={
-                    <div className="px-8 py-3 rounded-full bg-[#787878]/90 text-white font-semibold text-lg shadow-lg">
+                      <div className="px-4 py-2 md:px-8 md:py-3 rounded-full bg-[#787878]/90 text-white font-semibold text-sm md:text-lg shadow-lg">
                       Harsh verma - Fangore
                     </div>
                   }
                 />
+                </div>
               </div>
             </div>
           </div>
@@ -486,7 +503,7 @@ export default function Contact() {
             <div>
               <a
                 href="mailto:harshbuildweb@gmail.com"
-                className="text-3xl md:text-4xl lg:text-5xl font-medium hover:opacity-70 transition-opacity block"
+                className="text-xl md:text-4xl lg:text-5xl font-medium hover:opacity-70 transition-opacity block"
               >
                 harshbuildweb@gmail.com
               </a>
