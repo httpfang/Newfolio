@@ -301,7 +301,7 @@ export default function Contact() {
               <div className="mt-15 hidden md:flex justify-center items-center w-full md:justify-start">
                 <div className="tilted-card-wrapper">
                 <TiltedCard
-                  imageSrc="https://media.licdn.com/dms/image/v2/D5603AQEMnSYb1oo-UQ/profile-displayphoto-scale_200_200/B56Zfn.oG6GQAg-/0/1751943646266?e=1766016000&v=beta&t=V5kgTuD_LcAmH-9SBXkCh_IKxR24HDnz6EUXsspMaPE"
+                  imageSrc="/img1.jpg"
                   altText="Harsh verma - GNX Album Cover"
                   captionText="Harsh verma - Fangore"
                   containerHeight="380px"

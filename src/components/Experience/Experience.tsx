@@ -5,42 +5,56 @@ import { ChevronDown, Check, RefreshCw, Clock } from 'lucide-react';
 import ScrollFloat from '@/bits/ScrollFloat';
 import { useScrollCardReveal } from '@/bits/useScrollCardReveal';
 import LightRays from '@/bits/LightRays.bg';
+import { EXPERIENCES } from '@/constants/constants';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Static data - will be updated later
+// Helper function to format date
+const formatDateRange = (startDate: string | undefined, endDate: string | undefined) => {
+  if (!startDate || !endDate) return '2025-2025';
+  const startYear = startDate.split('-')[0];
+  const endYear = endDate.split('-')[0];
+  return `${startYear}-${endYear}`;
+};
+
+const formatMonth = (dateStr: string | undefined) => {
+  if (!dateStr) return 'Jan';
+  return new Date(dateStr + '-01').toLocaleDateString('en-US', { month: 'short' });
+};
+
+// Experience data
 const experienceData = [
   {
     id: 1,
-    title: 'Freelance Graphic Designer',
-    subtitle: 'Logo, Brand Identity, Social Media, etc',
-    dateRange: '2022-Present',
-    startMonth: 'Nov',
+    title: 'Certified Chaos Curator',
+    subtitle: 'brand identity, tasteful havoc, brainrot',
+    dateRange: '2016-Present',
+    startMonth: 'Jan',
     endMonth: 'Present',
     isCurrent: true,
   },
   {
     id: 2,
-    title: 'Etsy Seller',
-    subtitle: 'Watercolor Illustrations & Merch Design Templates',
-    dateRange: '2022-Present',
-    startMonth: 'Nov',
+    title: EXPERIENCES[0]?.title || 'Full Stack Developer Intern',
+    company: EXPERIENCES[0]?.company || '1StopKyc',
+    dateRange: '2025-Present',
+    startMonth: 'Jan',
     endMonth: 'Present',
     isCurrent: true,
   },
   {
     id: 3,
-    title: 'Junior Staff Of Industrial Engineering Team',
-    company: 'PT Kanaan Global Indonesia',
-    dateRange: '2021-2022',
-    startMonth: 'Sept',
-    endMonth: 'Aug',
+    title: EXPERIENCES[1]?.title || 'Frontend Developer',
+    company: EXPERIENCES[1]?.company || 'Skepsi',
+    dateRange: formatDateRange(EXPERIENCES[1]?.startDate, EXPERIENCES[1]?.endDate),
+    startMonth: formatMonth(EXPERIENCES[1]?.startDate),
+    endMonth: formatMonth(EXPERIENCES[1]?.endDate),
     isCurrent: false,
   },
 ];
 
 const expertiseData = {
-  description: 'Logo, Brand Identity, Packaging, Poster & Editorial, Social Media Post, 3D & Motion Graphic.',
+  description: 'Brainrot talks, yapper ( really😘 ), Solo Trveler, fridge magnets, sleep cycle (🥹), J session (👀)',
   hardSkills: {
     imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop',
     software: ['Ai', 'Ps', 'Ae', 'Id', 'Figma', 'Blender'],
@@ -51,26 +65,24 @@ const expertiseData = {
 const educationData = [
   {
     id: 1,
-    title: 'UI/UX Bootcamp Course',
-    institution: 'Skola Expert',
-    dateRange: '2022',
-    isCompleted: true,
+    title: 'BTech CSE',
+    institution: 'Lovely Professional University',
+    dateRange: '2022-26',
+    isCompleted: false,
   },
   {
     id: 2,
-    title: 'Civil Engineering',
-    institution: 'Universitas Sebelas Maret',
-    dateRange: '2017-2021',
-    gpa: 'GPA 3,59/4,00',
+    title: 'Schooling',
+    institution: 'DAV Public School Kota',
+    dateRange: '2016-2021',
     isCompleted: true,
   },
   {
     id: 3,
-    title: 'Science',
-    institution: 'SMA N 1 Yogyakarta',
-    dateRange: '2015-2017',
-    gpa: 'GPA 83,4/100',
-    isCompleted: true,
+    title: 'Learning from life and Youtube',
+    institution: 'Life',
+    dateRange: '2022-Present',
+    isCompleted: false,
   },
 ];
 
@@ -99,7 +111,7 @@ function ExperienceCard({ experience }: { experience: typeof experienceData[0] }
         {experience.title}
         {(experience.subtitle || experience.company) && (
           <span className="block text-sm font-normal text-white/70 mt-1">
-            ({experience.subtitle || experience.company})
+            {experience.subtitle || experience.company}
           </span>
         )}
       </h3>
@@ -137,11 +149,6 @@ function EducationCard({ education }: { education: typeof educationData[0] }) {
       <h3 className="text-[15px] font-semibold text-white mb-2 pr-10 leading-tight">
         {education.title}
       </h3>
-
-      {/* GPA */}
-      {education.gpa && (
-        <p className="text-xs text-white/70 mt-1">({education.gpa})</p>
-      )}
     </div>
   );
 }
@@ -511,16 +518,17 @@ export default function ExperienceSection() {
             </div>
 
             {/* Image Container */}
-            <div className="mb-4">
+            <div className="mb-4 w-full">
               <div
                 ref={imageCardRef}
-                className="bg-white/10 backdrop-blur-sm rounded-[12px] overflow-hidden shadow-[0_2px_8px_rgba(255,255,255,0.1)] border border-white/10"
+                className="bg-white/10 backdrop-blur-sm rounded-[12px] overflow-hidden shadow-[0_2px_8px_rgba(255,255,255,0.1)] border border-white/10 w-full"
               >
-                <div className="aspect-[5/6] bg-gray-200 relative max-h-[400px]">
+                <div className="aspect-[5/6] bg-gray-200 relative max-h-[400px] w-full">
                   <img
                     src={expertiseData.hardSkills.imageUrl}
                     alt="Professional workspace setup showing laptop, smartphone, notebook, and desk accessories"
-                    className="w-full h-full object-cover grayscale"
+                    className="w-full h-full object-cover object-center grayscale"
+                    style={{ width: '100%', height: '100%' }}
                   />
                 </div>
               </div>

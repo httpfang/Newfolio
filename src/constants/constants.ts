@@ -24,11 +24,11 @@ export const PERSONAL_INFO = {
 export const EXPERIENCES: Experience[] = [
   {
     id: '1',
-    title: 'Full Stack Developer Intern',
+    title: 'Full Stack Developer',
     company: '1StopKyc',
     location: 'Mumbai, India',
     startDate: '2025-01',
-    endDate: '2025-07',
+    endDate: 'Present',
     description: [
       'Built a modular web portal using React and TypeScript from scratch, increasing maintainability by 35%',
       'Implemented secure role-based authentication and authorization, reducing unauthorized access incidents',

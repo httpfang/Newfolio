@@ -74,18 +74,18 @@ export default function About() {
       {
         opacity: isInViewport ? 1 : 0,
         y: isInViewport ? 0 : 20,
-        clipPath: isInViewport ? 'inset(0% 0% 0% 0%)' : 'inset(0% 0% 100% 0%)',
+        clipPath: isInViewport ? "inset(0% 0% 0% 0%)" : "inset(0% 0% 100% 0%)",
       },
       {
         opacity: 1,
         y: 0,
-        clipPath: 'inset(0% 0% 0% 0%)',
+        clipPath: "inset(0% 0% 0% 0%)",
         duration: 2,
-        ease: 'power1.out',
+        ease: "power1.out",
         scrollTrigger: {
           trigger: el,
-          start: 'top 90%',
-          end: 'top 50%',
+          start: "top 90%",
+          end: "top 50%",
           scrub: true,
           immediateRender: isInViewport,
         },
@@ -108,11 +108,14 @@ export default function About() {
       className="mt-0 sm:mt-[50px] md:mt-[70px] pt-8 sm:pt-10 md:pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F5F3EE] relative overflow-hidden"
     >
       {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-[0.02]" style={{
-        backgroundImage: `radial-gradient(circle at 1px 1px, #2D5016 1px, transparent 0)`,
-        backgroundSize: '40px 40px'
-      }}></div>
-      
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #2D5016 1px, transparent 0)`,
+          backgroundSize: "40px 40px",
+        }}
+      ></div>
+
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Title */}
         <div className="mb-8 sm:mb-10 md:mb-12 lg:mb-16 lg:flex lg:items-start lg:justify-between lg:gap-12">
@@ -130,38 +133,36 @@ export default function About() {
             </ScrollFloat>
             <div className="flex items-center gap-3 mt-3 sm:mt-4">
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
-              <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">***</div>
+              <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">
+                ***
+              </div>
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
             </div>
-            
+
             {/* Rectangular Image Placeholder */}
             <div className="mt-6 sm:mt-8 w-full max-w-md group ">
               <PixelTransition
                 firstContent={
-                  <div className="w-full h-[200px] sm:h-[240px] lg:h-[280px] flex items-center justify-center text-[#2D5016] bg-[#E8E6E1] rounded-lg border border-[#2D5016]/10">
-                    <p className="text-center px-4 text-sm font-light">
-                      Image Placeholder
-                      <br />
-                      <span className="text-xs text-[#2D5016]/40">
-                        (Add your image)
-                      </span>
-                    </p>
-                  </div>
+                  <img
+                    src="/imgleft.jpg"
+                    alt="About me"
+                    className="w-full h-[200px] sm:h-[240px] lg:h-[280px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 rounded-lg"
+                  />
                 }
                 secondContent={
                   <img
-                    src="/placeholder-rect.jpg"
+                    src="/imgleft.jpg"
                     alt="About me"
-                    className="w-full h-[200px] sm:h-[240px] lg:h-[280px] object-cover grayscale hover:grayscale-[50%] transition-all duration-700 rounded-lg"
+                    className="w-full h-[200px] sm:h-[240px] lg:h-[280px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 rounded-lg"
                   />
                 }
                 gridSize={7}
                 pixelColor="#2D5016"
                 animationStepDuration={0.3}
                 once={false}
-                className="w-full bg-transparent border-0 rounded-lg shadow-[0_8px_30px_rgb(45,80,22,0.08)] group-hover:shadow-[0_12px_40px_rgb(45,80,22,0.12)] transition-shadow duration-500"
+                className="w-full bg-transparent !border-0 rounded-lg"
                 aspectRatio="0%"
-                style={{ height: "200px" }}
+                style={{ height: "200px", border: "none !important" }}
               />
             </div>
           </div>
@@ -172,11 +173,15 @@ export default function About() {
               ref={rightParagraphRef}
               className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-serif text-[#2D5016] leading-[1.3] tracking-tight"
             >
-              I'M MOST INSPIRED BY TECHNOLOGY, PROBLEM-SOLVING AND CREATIVE CODING. I CAN'T IMAGINE MY LIFE WITHOUT BUILDING MEANINGFUL DIGITAL EXPERIENCES.
+              I'm most inspired by technology, problem-solving and creative
+              coding. I can't imagine my life without building meaningful
+              digital experiences. Have to say all of these right ( lol🤦‍♂️)
             </p>
             <div className="flex items-center gap-3 mt-4 sm:mt-5 lg:justify-end">
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
-              <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">***</div>
+              <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">
+                ***
+              </div>
               <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
             </div>
           </div>
@@ -188,30 +193,28 @@ export default function About() {
           <div className="absolute top-[-5%] right-[8%] w-[240px] sm:w-[280px] lg:w-[300px] hidden lg:block z-0 group">
             <PixelTransition
               firstContent={
-                <div className="w-full h-[180px] sm:h-[200px] lg:h-[220px] flex items-center justify-center text-[#2D5016] bg-[#E8E6E1] rounded-2xl border border-[#2D5016]/10">
-                  <p className="text-center px-4 text-xs font-light">
-                    Image
-                    <br />
-                    <span className="text-[10px] text-[#2D5016]/40">
-                      (Add your image)
-                    </span>
-                  </p>
-                </div>
+                <img
+                  src="/imgright.png"
+                  alt="About me"
+                  className="w-full h-[180px] sm:h-[200px] lg:h-[220px] object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-700 rounded-2xl"
+                  style={{ objectPosition: 'center 120%' }}
+                />
               }
               secondContent={
                 <img
-                  src="/placeholder-middle.jpg"
+                  src="/imgright.png"
                   alt="About me"
-                  className="w-full h-[180px] sm:h-[200px] lg:h-[220px] object-cover grayscale hover:grayscale-[50%] transition-all duration-700 rounded-2xl"
+                  className="w-full h-[180px] sm:h-[200px] lg:h-[220px] object-cover object-center grayscale group-hover:grayscale-0 transition-all duration-700 rounded-2xl"
+                  style={{ objectPosition: 'center 120%' }}
                 />
               }
               gridSize={7}
               pixelColor="#2D5016"
               animationStepDuration={0.3}
               once={false}
-              className="w-full rounded-2xl shadow-[0_10px_40px_rgb(45,80,22,0.08)] group-hover:shadow-[0_15px_50px_rgb(45,80,22,0.12)] bg-transparent border-0 transition-shadow duration-500"
+              className="w-full rounded-2xl bg-transparent !border-0"
               aspectRatio="0%"
-              style={{ height: "180px" }}
+              style={{ height: "180px", border: "none !important" }}
             />
           </div>
 
@@ -277,70 +280,66 @@ export default function About() {
           </div>
 
           {/* Central Image - Vertical/Portrait with Rounded Edges */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden lg:block group">
+          <div className="absolute top-[65%] left-1/2 transform -translate-x-1/2 -translate-y-[60%] z-10 hidden lg:block group">
             <div className="relative">
-              {/* Decorative corner elements */}
-              <div className="absolute -top-3 -left-3 w-6 h-6 border-l-2 border-t-2 border-[#2D5016]/20 rounded-tl-lg"></div>
-              <div className="absolute -bottom-3 -right-3 w-6 h-6 border-r-2 border-b-2 border-[#2D5016]/20 rounded-br-lg"></div>
-              
               <PixelTransition
                 firstContent={
-                  <div className="w-[300px] h-[480px] xl:w-[340px] xl:h-[540px] flex items-center justify-center text-[#2D5016] rounded-3xl bg-[#E8E6E1] border border-[#2D5016]/10">
-                    <p className="text-center px-4 font-light">
-                      Your Photo
-                      <br />
-                      <span className="text-sm text-[#2D5016]/40">
-                        (Add your image)
-                      </span>
-                    </p>
-                  </div>
+                  <img
+                    src="/img3.jpg"
+                    alt="About me"
+                    className="w-[300px] h-[480px] xl:w-[340px] xl:h-[540px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 rounded-3xl"
+                    style={{ transform: "translateY(-30px)" }}
+                  />
                 }
                 secondContent={
                   <img
-                    src="/placeholder-about.jpg"
+                    src="/img3.jpg"
                     alt="About me"
-                    className="w-[300px] h-[480px] xl:w-[340px] xl:h-[540px] object-cover grayscale hover:grayscale-0 transition-all duration-700 rounded-3xl"
+                    className="w-[300px] h-[480px] xl:w-[340px] xl:h-[540px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 rounded-3xl"
+                    style={{ transform: "translateY(-30px)" }}
                   />
                 }
                 gridSize={7}
                 pixelColor="#2D5016"
                 animationStepDuration={0.3}
                 once={false}
-                className="rounded-3xl shadow-[0_20px_60px_rgb(45,80,22,0.15)] group-hover:shadow-[0_25px_70px_rgb(45,80,22,0.2)] bg-transparent border-0 transition-shadow duration-500"
+                className="rounded-3xl bg-transparent !border-0"
                 aspectRatio="0%"
-                style={{ width: "300px", height: "480px" }}
+                style={{
+                  width: "300px",
+                  height: "480px",
+                  border: "none !important",
+                }}
               />
             </div>
           </div>
 
           {/* Mobile Image */}
-          <div className="lg:hidden mx-auto my-8 sm:my-10 md:my-12 max-w-[280px]">
+          <div className="lg:hidden mx-auto my-8 sm:my-10 md:my-12 max-w-[280px] group">
             <PixelTransition
               firstContent={
-                <div className="w-[280px] h-[420px] flex items-center justify-center text-[#2D5016] rounded-3xl bg-[#E8E6E1] border border-[#2D5016]/10">
-                  <p className="text-center px-4 font-light">
-                    Your Photo
-                    <br />
-                    <span className="text-sm text-[#2D5016]/40">
-                      (Add your image)
-                    </span>
-                  </p>
-                </div>
+                <img
+                  src="/img3.jpg"
+                  alt="About me"
+                  className="w-[280px] h-[420px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 rounded-3xl"
+                  style={{ transform: "translateY(-20px)" }}
+                />
               }
               secondContent={
                 <img
-                  src="/placeholder-about.jpg"
+                  src="/img3.jpg"
                   alt="About me"
-                  className="w-[280px] h-[420px] object-cover grayscale rounded-3xl"
+                  className="w-[280px] h-[420px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 rounded-3xl"
+                  style={{ transform: "translateY(-20px)" }}
                 />
               }
               gridSize={7}
               pixelColor="#2D5016"
               animationStepDuration={0.3}
               once={true}
-              className="rounded-3xl shadow-[0_15px_50px_rgb(45,80,22,0.12)] bg-transparent border-0"
+              className="rounded-3xl bg-transparent !border-0"
               aspectRatio="0%"
-              style={{ width: "280px", height: "420px" }}
+              style={{ width: "280px", height: "420px", border: "none !important" }}
             />
           </div>
         </div>
