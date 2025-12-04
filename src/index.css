@@ -1,3 +1,22 @@
+/* Brimful Font Face Declarations */
+@font-face {
+  font-family: 'Brimful';
+  src: url('/fonts/Brimful Regular.otf') format('opentype'),
+       url('/fonts/Brimful Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Brimful';
+  src: url('/fonts/Brimful Italic.otf') format('opentype'),
+       url('/fonts/Brimful Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* Tailwind v4 base, components, and utilities */
 @import "tailwindcss";
 

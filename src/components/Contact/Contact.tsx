@@ -274,7 +274,7 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto">
         {/* Title - Centered */}
         <div ref={titleRef} className="reveal-element mb-20 text-center">
-          <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold">
+          <h1 className="text-5xl md:text-8xl lg:text-9xl font-bold" style={{ fontFamily: "'Brimful', serif", fontStyle: 'italic', letterSpacing: '0.05em' }}>
             Contact me
           </h1>
         </div>

@@ -397,6 +397,7 @@ export default function Projects() {
             stagger={0.03}
             containerClassName="my-0"
             textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
+            textStyle={{ fontFamily: "'Brimful', serif", letterSpacing: '0.05em' }}
           >
             PROJECTS
           </ScrollFloat>

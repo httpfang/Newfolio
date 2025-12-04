@@ -227,7 +227,7 @@ function SectionHeader({ title }: { title: string }) {
 
   return (
     <div ref={headerRef} className="flex items-center gap-2 mb-6">
-      <h2 className="text-3xl lg:text-4xl font-serif text-white tracking-tight">
+      <h2 className="text-3xl lg:text-4xl font-serif text-white tracking-tight" style={{ fontFamily: "'Brimful', serif", letterSpacing: '0.05em' }}>
         {title}
       </h2>
       <ChevronDown className="w-5 h-5 text-white/60" strokeWidth={2} />
