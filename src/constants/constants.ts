@@ -1,4 +1,4 @@
-import type { Project, Skill, Experience } from '@/types/types';
+import type { Project, Skill, Experience, SocialLink } from '@/types/types';
 
 // Navigation items
 export const NAV_ITEMS = [
@@ -12,23 +12,24 @@ export const NAV_ITEMS = [
 
 // Personal info
 export const PERSONAL_INFO = {
-  name: 'Harshaas Verma',
+  name: 'Harsh Verma',
   title: 'Full Stack Developer',
   email: 'harshbuildweb@gmail.com',
   phone: '+917742054087',
   location: 'India',
   bio: 'Proactive and results-driven Full Stack Developer with hands-on experience in designing and developing scalable, secure, and high-performance web applications using the MERN stack. Strong in API development, UI/UX optimization, and cloud integration.',
+  cvUrl: 'https://drive.google.com/file/d/1q7ftVj3P9V3w8Xl-1d3JaNPlxrU_ozIa/view',
 } as const;
 
 // Work experience
 export const EXPERIENCES: Experience[] = [
   {
     id: '1',
-    title: 'Full Stack Developer',
+    title: 'Full Stack Developer Intern',
     company: '1StopKyc',
     location: 'Mumbai, India',
     startDate: '2025-01',
-    endDate: 'Present',
+    endDate: '2025-07',
     description: [
       'Built a modular web portal using React and TypeScript from scratch, increasing maintainability by 35%',
       'Implemented secure role-based authentication and authorization, reducing unauthorized access incidents',
@@ -107,19 +108,26 @@ export const SKILLS: Skill[] = [
   { name: 'Tailwind CSS', category: 'frontend', level: 'advanced' },
   { name: 'GSAP', category: 'frontend', level: 'intermediate' },
   { name: 'Framer Motion', category: 'frontend', level: 'intermediate' },
+  { name: 'Locomotive', category: 'frontend', level: 'intermediate' },
   // Backend
   { name: 'Node.js', category: 'backend', level: 'advanced' },
   { name: 'Express.js', category: 'backend', level: 'advanced' },
   // Tools & Platforms
   { name: 'Git', category: 'tool', level: 'advanced' },
   { name: 'Docker', category: 'tool', level: 'intermediate' },
+  { name: 'DevOps', category: 'tool', level: 'intermediate' },
   { name: 'Postman', category: 'tool', level: 'advanced' },
   { name: 'MongoDB', category: 'tool', level: 'advanced' },
   { name: 'Drizzle ORM', category: 'tool', level: 'intermediate' },
+  { name: 'Neon DB', category: 'tool', level: 'intermediate' },
   { name: 'AWS', category: 'tool', level: 'intermediate' },
   { name: 'Stripe', category: 'tool', level: 'intermediate' },
   { name: 'Clerk', category: 'tool', level: 'intermediate' },
 ];
 
-
+// Social links - update with your actual URLs
+export const SOCIAL_LINKS: SocialLink[] = [
+  { name: 'LinkedIn', url: 'https://linkedin.com/in/yourprofile', icon: 'linkedin' },
+  { name: 'GitHub', url: 'https://github.com/yourusername', icon: 'github' },
+];
 

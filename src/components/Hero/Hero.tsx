@@ -268,8 +268,17 @@ export default function Hero() {
               {PERSONAL_INFO.name?.split(" ")[0] || "Arlo"}
             </a>
 
-            {/* CTA Emoji */}
-            <div ref={ctaRef}>
+            {/* Nav actions */}
+            <div ref={ctaRef} className="flex items-center gap-3 sm:gap-4">
+              <a
+                href={PERSONAL_INFO.cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs tracking-[0.18em] uppercase text-[#1C1B1A] border border-[#1C1B1A]/25 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 hover:bg-[#1C1B1A] hover:text-white transition-all duration-300"
+              >
+                CV
+                <span aria-hidden="true">↗</span>
+              </a>
               <Button
                 variant="ghost"
                 className="p-0 bg-transparent hover:bg-transparent text-2xl"

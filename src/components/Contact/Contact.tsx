@@ -6,6 +6,7 @@ import {
   validateField,
   type FormErrors,
 } from "../../lib/formValidation";
+import { PERSONAL_INFO } from "@/constants/constants";
 
 export default function Contact() {
   const sectionRef = useRef(null);
@@ -518,6 +519,26 @@ export default function Contact() {
                 (+91) 7742054087
               </a>
             </div>
+          </div>
+
+          {/* CV callout */}
+          <div className="mb-16">
+            <a
+              href={PERSONAL_INFO.cvUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex flex-col sm:flex-row sm:items-end gap-2 sm:gap-6"
+            >
+              <span
+                className="text-4xl md:text-6xl lg:text-7xl font-bold italic transition-transform duration-300 group-hover:translate-x-1"
+                style={{ fontFamily: "'Brimful', serif", letterSpacing: "0.05em" }}
+              >
+                Peek the CV
+              </span>
+              <span className="text-sm md:text-base uppercase tracking-[0.25em] pb-2 border-b border-black/40 group-hover:border-black transition-colors">
+                open resume ↗
+              </span>
+            </a>
           </div>
 
           {/* Bottom Footer Info */}
