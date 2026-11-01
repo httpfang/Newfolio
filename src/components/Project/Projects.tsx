@@ -38,19 +38,37 @@ interface GitHubRepo {
 interface ContributionDay {
   date: string;
   count: number;
+  level?: number;
 }
 
+interface ContributionBreakdown {
+  commits: number;
+  pullRequests: number;
+  reviews: number;
+  issues: number;
+}
+
+// Classic PAT with `read:user` is required for private/org contributions.
+// Fine-grained tokens (github_pat_*) usually only return public totals.
 const CONTRIBUTIONS_QUERY = `
-  query ($login: String!, $from: DateTime!, $to: DateTime!) {
-    user(login: $login) {
+  query ($from: DateTime!, $to: DateTime!) {
+    viewer {
+      login
       contributionsCollection(from: $from, to: $to) {
         contributionYears
+        totalCommitContributions
+        totalPullRequestContributions
+        totalPullRequestReviewContributions
+        totalIssueContributions
+        hasAnyRestrictedContributions
+        restrictedContributionsCount
         contributionCalendar {
           totalContributions
           weeks {
             contributionDays {
               date
               contributionCount
+              contributionLevel
             }
           }
         }
@@ -59,20 +77,51 @@ const CONTRIBUTIONS_QUERY = `
   }
 `;
 
+const LEVEL_MAP: Record<string, number> = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 4,
+};
+
+const WEEKDAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
+const MONTH_SHORT = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 export default function Projects() {
   const [githubData, setGithubData] = useState<GitHubProfile | null>(null);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [profileLoading, setProfileLoading] = useState(true);
   const [availableYears, setAvailableYears] = useState<number[]>(DEFAULT_YEAR_OPTIONS);
   const [selectedYear, setSelectedYear] = useState<number>(DEFAULT_YEAR_OPTIONS[0]);
-  const [contributions, setContributions] = useState<ContributionDay[]>([]);
+  const [contributionWeeks, setContributionWeeks] = useState<ContributionDay[][]>(
+    []
+  );
   const [contributionsLoading, setContributionsLoading] = useState(true);
   const [contributionError, setContributionError] = useState<string | null>(null);
   const [contributionTotal, setContributionTotal] = useState(0);
+  const [breakdown, setBreakdown] = useState<ContributionBreakdown | null>(null);
+  const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null);
+  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [tokenHint, setTokenHint] = useState<string | null>(null);
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const statsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const calendarRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -121,109 +170,194 @@ export default function Projects() {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchContributions = async () => {
-      const token = import.meta.env.VITE_GITHUB_TOKEN as string | undefined;
-      
-      if (!token || token.trim() === "") {
-        if (isMounted) {
-          setContributions([]);
-          setContributionTotal(0);
-          setContributionError(
-            "Add VITE_GITHUB_TOKEN to .env.local and restart the dev server."
-          );
-          setContributionsLoading(false);
-        }
-        return;
+    const chunkIntoWeeks = (days: ContributionDay[]) => {
+      if (!days.length) return [];
+
+      // Pad so columns start on Sunday (GitHub-style), even for calendar-year APIs
+      const firstWeekday = new Date(days[0].date + "T00:00:00").getDay(); // 0 = Sun
+      const padded: ContributionDay[] = [
+        ...Array.from({ length: firstWeekday }, (_, index) => ({
+          date: `pad-start-${index}`,
+          count: 0,
+          level: 0,
+        })),
+        ...days,
+      ];
+
+      while (padded.length % 7 !== 0) {
+        padded.push({
+          date: `pad-end-${padded.length}`,
+          count: 0,
+          level: 0,
+        });
       }
 
-      setContributionsLoading(true);
-      setContributionError(null);
+      const weeks: ContributionDay[][] = [];
+      for (let i = 0; i < padded.length; i += 7) {
+        weeks.push(padded.slice(i, i + 7));
+      }
+      return weeks;
+    };
 
+    const applyCalendar = (
+      days: ContributionDay[],
+      total: number,
+      years?: number[],
+      nextBreakdown?: ContributionBreakdown | null
+    ) => {
+      if (!isMounted) return;
+      if (years?.length) {
+        setAvailableYears(Array.from(new Set(years)).sort((a, b) => b - a));
+      }
+      setContributionWeeks(chunkIntoWeeks(days));
+      setContributionTotal(total);
+      setBreakdown(nextBreakdown ?? null);
+      setContributionError(null);
+    };
+
+    const fetchPublicCalendar = async () => {
+      const response = await fetch(
+        `https://github-contributions-api.jogruber.de/v4/${GITHUB_USERNAME}?y=${selectedYear}`
+      );
+      if (!response.ok) {
+        throw new Error(`Public contributions API failed (${response.status})`);
+      }
+
+      const json = await response.json();
+      const days: ContributionDay[] = (json.contributions ?? []).map(
+        (day: { date: string; count: number; level: number }) => ({
+          date: day.date,
+          count: day.count,
+          level: day.level,
+        })
+      );
+      const total =
+        json.total?.[String(selectedYear)] ??
+        days.reduce((sum, day) => sum + day.count, 0);
+
+      applyCalendar(days, total);
+    };
+
+    const fetchGraphQLCalendar = async (token: string) => {
       const from = new Date(Date.UTC(selectedYear, 0, 1)).toISOString();
       const to = new Date(Date.UTC(selectedYear, 11, 31, 23, 59, 59)).toISOString();
 
-      try {
-        const response = await fetch("https://api.github.com/graphql", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: CONTRIBUTIONS_QUERY,
-            variables: { login: GITHUB_USERNAME, from, to },
-          }),
-        });
+      const response = await fetch("https://api.github.com/graphql", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: CONTRIBUTIONS_QUERY,
+          variables: { from, to },
+        }),
+      });
 
-        const json = await response.json();
+      const json = await response.json();
 
-        if (!response.ok) {
-          const errorMsg = json.message || `HTTP ${response.status}: ${response.statusText}`;
-          console.error("GitHub API Error:", errorMsg);
-          throw new Error(errorMsg);
-        }
+      if (!response.ok) {
+        throw new Error(json.message || `HTTP ${response.status}`);
+      }
+      if (json.errors?.length) {
+        throw new Error(json.errors[0]?.message || "GraphQL query error");
+      }
+      if (!json.data?.viewer) {
+        throw new Error("Unable to read authenticated GitHub user from token");
+      }
 
-        if (json.errors) {
-          const errorMsg = json.errors[0]?.message || "GraphQL query error";
-          console.error("GraphQL Error:", errorMsg);
-          throw new Error(errorMsg);
-        }
-
-        if (!json.data?.user) {
-          console.error("User not found:", GITHUB_USERNAME);
-          throw new Error(`User "${GITHUB_USERNAME}" not found`);
-        }
-
-        const collection = json.data.user.contributionsCollection;
-        if (!collection) {
-          throw new Error("No contribution data available");
-        }
-
-        const calendar = collection.contributionCalendar;
-        const weeks = calendar?.weeks ?? [];
-        const totalFromCalendar = calendar?.totalContributions;
-
-        const contributionDays: ContributionDay[] = weeks.flatMap(
-          (week: { contributionDays: { date: string; contributionCount: number }[] }) =>
-            week.contributionDays.map((day) => ({
-              date: day.date,
-              count: day.contributionCount,
-            }))
+      const viewerLogin = json.data.viewer.login as string;
+      if (viewerLogin.toLowerCase() !== GITHUB_USERNAME.toLowerCase()) {
+        throw new Error(
+          `Token belongs to @${viewerLogin}, but site is set to @${GITHUB_USERNAME}`
         );
+      }
 
-        const calculatedTotal = contributionDays.reduce((acc, day) => acc + day.count, 0);
+      const collection = json.data.viewer.contributionsCollection;
+      const calendar = collection.contributionCalendar;
+      const weeks = calendar?.weeks ?? [];
 
-        if (!isMounted) return;
+      const days: ContributionDay[] = weeks.flatMap(
+        (week: {
+          contributionDays: {
+            date: string;
+            contributionCount: number;
+            contributionLevel: string;
+          }[];
+        }) =>
+          week.contributionDays.map((day) => ({
+            date: day.date,
+            count: day.contributionCount,
+            level: LEVEL_MAP[day.contributionLevel] ?? 0,
+          }))
+      );
 
-        const contributionYears: number[] = collection.contributionYears ?? [];
-        if (contributionYears.length) {
-          const sortedYears = Array.from(new Set(contributionYears)).sort((a, b) => b - a);
-          setAvailableYears(sortedYears);
+      applyCalendar(
+        days,
+        calendar?.totalContributions ??
+          days.reduce((sum, day) => sum + day.count, 0),
+        collection.contributionYears,
+        {
+          commits: collection.totalCommitContributions ?? 0,
+          pullRequests: collection.totalPullRequestContributions ?? 0,
+          reviews: collection.totalPullRequestReviewContributions ?? 0,
+          issues: collection.totalIssueContributions ?? 0,
+        }
+      );
+
+      return {
+        total: calendar?.totalContributions ?? 0,
+        isFineGrained: token.startsWith("github_pat_"),
+      };
+    };
+
+    const fetchContributions = async () => {
+      setContributionsLoading(true);
+      setContributionError(null);
+
+      const token = (import.meta.env.VITE_GITHUB_TOKEN as string | undefined)?.trim();
+
+      try {
+        // Prefer GraphQL when a classic token with read:user exists (private + org)
+        if (token) {
+          try {
+            const result = await fetchGraphQLCalendar(token);
+            // Fine-grained PATs usually miss private/org squares — fall back to public calendar visual
+            // only if GraphQL somehow failed above. Keep GraphQL data, but warn via console.
+            if (result.isFineGrained && isMounted) {
+              setTokenHint(
+                "Your token is fine-grained, so private/org squares are missing. Create a classic PAT with only the read:user scope, put it in .env as VITE_GITHUB_TOKEN, then restart npm run dev."
+              );
+            } else if (isMounted) {
+              setTokenHint(null);
+            }
+            return;
+          } catch (graphqlError) {
+            console.warn("GraphQL contributions failed, falling back:", graphqlError);
+          }
         }
 
-        setContributions(contributionDays);
-        setContributionTotal(totalFromCalendar ?? calculatedTotal);
-        setContributionError(null);
+        // Public profile calendar (only what is visible without private access)
+        await fetchPublicCalendar();
       } catch (error) {
         console.error("Error fetching contribution data:", error);
         if (isMounted) {
-          setContributions([]);
+          setContributionWeeks([]);
           setContributionTotal(0);
+          setBreakdown(null);
           const errorMessage = error instanceof Error ? error.message : "Unknown error";
           setContributionError(
             errorMessage.includes("401") || errorMessage.includes("Bad credentials")
-              ? "Invalid GitHub token. Please check your VITE_GITHUB_TOKEN."
+              ? "Invalid GitHub token. Check VITE_GITHUB_TOKEN."
               : errorMessage.includes("403") || errorMessage.includes("rate limit")
-              ? "Rate limit exceeded. Please try again later."
-              : errorMessage.includes("not found")
-              ? `User "${GITHUB_USERNAME}" not found.`
-              : `Unable to load contributions: ${errorMessage}`
+                ? "Rate limit exceeded. Try again later."
+                : errorMessage.includes("not found")
+                  ? `User "${GITHUB_USERNAME}" not found.`
+                  : `Unable to load contributions: ${errorMessage}`
           );
         }
       } finally {
-        if (isMounted) {
-          setContributionsLoading(false);
-        }
+        if (isMounted) setContributionsLoading(false);
       }
     };
 
@@ -324,39 +458,60 @@ export default function Projects() {
     return repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
   }, [repos]);
 
-  const displayedContributions = useMemo<ContributionDay[]>(() => {
-    if (contributions.length === 0) {
-      return Array.from({ length: 84 }, (_, index) => ({
-        date: `placeholder-${index}`,
-        count: 0,
-      }));
+  const getContributionColor = (day: ContributionDay) => {
+    const level =
+      typeof day.level === "number"
+        ? day.level
+        : day.count <= 0
+          ? 0
+          : day.count < 3
+            ? 1
+            : day.count < 6
+              ? 2
+              : day.count < 10
+                ? 3
+                : 4;
+
+    switch (level) {
+      case 1:
+        return "#A9C987";
+      case 2:
+        return "#7DA651";
+      case 3:
+        return "#4D7028";
+      case 4:
+        return "#2D5016";
+      default:
+        return "#E8E6E1";
     }
-    return contributions.slice(-84);
-  }, [contributions]);
-
-  const maxContribution = useMemo(
-    () =>
-      displayedContributions.reduce((max, day) => Math.max(max, day.count), 0) || 1,
-    [displayedContributions]
-  );
-
-  const getContributionColor = (count: number) => {
-    const ratio = maxContribution ? count / maxContribution : 0;
-    if (ratio > 0.75) return "#2D5016";
-    if (ratio > 0.5) return "#4D7028";
-    if (ratio > 0.25) return "#7DA651";
-    if (ratio > 0) return "#A9C987";
-    return "#E8E6E1";
   };
 
+  const monthLabels = useMemo(() => {
+    const labels: { label: string; weekIndex: number }[] = [];
+    let lastMonth = -1;
+
+    contributionWeeks.forEach((week, weekIndex) => {
+      const firstDay = week.find((day) => day?.date);
+      if (!firstDay) return;
+      const month = new Date(firstDay.date + "T00:00:00").getMonth();
+      if (month !== lastMonth) {
+        labels.push({ label: MONTH_SHORT[month], weekIndex });
+        lastMonth = month;
+      }
+    });
+
+    return labels;
+  }, [contributionWeeks]);
+
   const formatDate = (dateString: string): string => {
-    if (dateString.startsWith("placeholder")) return "";
+    if (!dateString || dateString.startsWith("placeholder")) return "";
     try {
-      const date = new Date(dateString);
-      const day = date.getDate();
-      const month = date.getMonth() + 1; // getMonth() returns 0-11
-      const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
+      const date = new Date(dateString + "T00:00:00");
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
     } catch {
       return dateString;
     }
@@ -591,12 +746,26 @@ export default function Projects() {
           </div>
 
         <div className="mt-20">
-          <h2 className="text-3xl lg:text-4xl font-serif text-[#2D5016] mb-8 tracking-tight">
+          <h2 className="text-3xl lg:text-4xl font-serif text-[#2D5016] mb-3 tracking-tight">
             Contribution Activity
           </h2>
+          <p className="text-sm text-[#2D5016]/65 mb-8 max-w-2xl">
+            Live GitHub progress tree for{" "}
+            <a
+              href={`https://github.com/${GITHUB_USERNAME}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-[#2D5016]"
+            >
+              @{GITHUB_USERNAME}
+            </a>
+            — personal repos, org repos, PRs, reviews, and issues that GitHub
+            attributes to this account.
+          </p>
+
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
             <div className="text-sm text-[#2D5016]/80">
-              Total contributions in {selectedYear}:{" "}
+              Total in {selectedYear}:{" "}
               <span className="font-semibold text-[#2D5016]">
                 {contributionsLoading ? "…" : contributionTotal.toLocaleString()}
               </span>
@@ -617,44 +786,155 @@ export default function Projects() {
             </label>
           </div>
 
-          <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-8 border border-[#2D5016]/10">
+          {tokenHint && (
+            <div className="mb-6 rounded-2xl border border-amber-500/30 bg-amber-50 px-4 py-3 text-sm text-amber-900/90">
+              {tokenHint}
+            </div>
+          )}
+
+          {breakdown && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+              {[
+                { label: "Commits", value: breakdown.commits },
+                { label: "Pull requests", value: breakdown.pullRequests },
+                { label: "Reviews", value: breakdown.reviews },
+                { label: "Issues", value: breakdown.issues },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-[#2D5016]/10 bg-white/50 px-4 py-3"
+                >
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#2D5016]/50">
+                    {stat.label}
+                  </p>
+                  <p className="text-2xl font-serif text-[#2D5016] mt-1">
+                    {stat.value.toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-3 sm:p-6 md:p-8 border border-[#2D5016]/10">
             {contributionError ? (
-              <div className="text-center text-sm text-[#2D5016]/70 py-6">{contributionError}</div>
+              <div className="text-center text-sm text-[#2D5016]/70 py-6">
+                {contributionError}
+              </div>
             ) : contributionsLoading ? (
               <div className="text-center text-sm text-[#2D5016]/70 py-6">
                 Fetching contribution data…
               </div>
+            ) : contributionWeeks.length === 0 ? (
+              <div className="text-center text-sm text-[#2D5016]/70 py-6">
+                No contribution data for {selectedYear}.
+              </div>
             ) : (
-              <div className="grid grid-cols-12 gap-2">
-                {displayedContributions.map((day, index) => (
+              <div ref={calendarRef} className="relative w-full overflow-visible">
+                {hoveredDay && (
                   <div
-                    key={`${day.date}-${index}`}
-                    className="aspect-square rounded-md transition-all duration-300 hover:scale-125 cursor-pointer group relative"
-                    style={{
-                      backgroundColor: getContributionColor(day.count),
-                      opacity: 0.9,
-                    }}
+                    className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] rounded bg-[#2D5016] px-2.5 py-1.5 text-[11px] text-white shadow-lg whitespace-nowrap"
+                    style={{ left: tooltipPos.x, top: tooltipPos.y }}
                   >
-                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#2D5016] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                      {day.count} contribution{day.count === 1 ? "" : "s"}
-                      {formatDate(day.date) ? ` on ${formatDate(day.date)}` : ""}
-                    </div>
+                    {hoveredDay.count} contribution
+                    {hoveredDay.count === 1 ? "" : "s"}
+                    {formatDate(hoveredDay.date)
+                      ? ` on ${formatDate(hoveredDay.date)}`
+                      : ""}
+                    <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-[#2D5016]" />
                   </div>
-                ))}
+                )}
+
+                <div
+                  className="grid mb-1 gap-[2px] sm:gap-[3px]"
+                  style={{
+                    gridTemplateColumns: `18px repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
+                  }}
+                >
+                  <div />
+                  {contributionWeeks.map((_, weekIndex) => {
+                    const month = monthLabels.find((m) => m.weekIndex === weekIndex);
+                    return (
+                      <div
+                        key={`month-${weekIndex}`}
+                        className="text-[8px] sm:text-[10px] text-[#2D5016]/55 h-3 sm:h-4 overflow-hidden"
+                      >
+                        {month?.label ?? ""}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div
+                  className="grid gap-[2px] sm:gap-[3px]"
+                  style={{
+                    gridTemplateColumns: `18px repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
+                  }}
+                >
+                  <div className="flex flex-col gap-[2px] sm:gap-[3px]">
+                    {WEEKDAY_LABELS.map((label, index) => (
+                      <div
+                        key={`weekday-${index}`}
+                        className="aspect-square text-[7px] sm:text-[9px] leading-none text-[#2D5016]/55 flex items-center justify-end"
+                      >
+                        {label}
+                      </div>
+                    ))}
+                  </div>
+
+                  {contributionWeeks.map((week, weekIndex) => (
+                    <div
+                      key={`week-${weekIndex}`}
+                      className="flex flex-col gap-[2px] sm:gap-[3px] min-w-0"
+                    >
+                      {week.map((day, dayIndex) => {
+                        const isPad = day.date.startsWith("pad-");
+                        return (
+                          <div
+                            key={`${day.date}-${dayIndex}`}
+                            className={`w-full aspect-square rounded-[1px] sm:rounded-[2px] min-w-0 ${
+                              isPad
+                                ? "opacity-0 pointer-events-none"
+                                : "cursor-pointer ring-0 hover:ring-1 hover:ring-[#2D5016]/50 hover:ring-offset-1 hover:ring-offset-[#F5F3EE]"
+                            }`}
+                            style={{
+                              backgroundColor: isPad
+                                ? "transparent"
+                                : getContributionColor(day),
+                            }}
+                            onMouseEnter={(event) => {
+                              if (isPad || !calendarRef.current) return;
+                              const cell = event.currentTarget.getBoundingClientRect();
+                              const parent =
+                                calendarRef.current.getBoundingClientRect();
+                              setHoveredDay(day);
+                              setTooltipPos({
+                                x: cell.left + cell.width / 2 - parent.left,
+                                y: cell.top - parent.top,
+                              });
+                            }}
+                            onMouseLeave={() => setHoveredDay(null)}
+                          />
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
             <div className="flex items-center gap-4 mt-6 text-xs text-[#2D5016]/60">
               <span>Less</span>
               <div className="flex gap-1">
-                <div className="w-4 h-4 rounded-sm bg-[#E8E6E1]"></div>
-                <div className="w-4 h-4 rounded-sm bg-[#7DA651]"></div>
-                <div className="w-4 h-4 rounded-sm bg-[#4D7028]"></div>
-                <div className="w-4 h-4 rounded-sm bg-[#2D5016]"></div>
+                <div className="w-3 h-3 rounded-[2px] bg-[#E8E6E1]"></div>
+                <div className="w-3 h-3 rounded-[2px] bg-[#A9C987]"></div>
+                <div className="w-3 h-3 rounded-[2px] bg-[#7DA651]"></div>
+                <div className="w-3 h-3 rounded-[2px] bg-[#4D7028]"></div>
+                <div className="w-3 h-3 rounded-[2px] bg-[#2D5016]"></div>
               </div>
               <span>More</span>
             </div>
           </div>
+
         </div>
 
         <p className="mt-10 text-center text-sm italic text-[#2D5016]/70">
