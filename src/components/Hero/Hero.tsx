@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/ui/button";
+import { ThemeToggle } from "@/ui/theme-toggle";
 import { PERSONAL_INFO, NAV_ITEMS } from "@/constants/constants";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
@@ -249,7 +250,7 @@ export default function Hero() {
                 e.preventDefault();
                 handleNavClick("#home");
               }}
-              className="text-xl sm:text-2xl font-serif italic text-black tracking-tight hover:opacity-80 transition-opacity relative"
+              className="text-xl sm:text-2xl font-serif italic text-folio-ink tracking-tight hover:opacity-80 transition-opacity relative"
               onMouseEnter={(e) => {
                 gsap.to(e.currentTarget, {
                   x: 5,
@@ -274,11 +275,12 @@ export default function Hero() {
                 href={PERSONAL_INFO.cvUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs tracking-[0.18em] uppercase text-[#1C1B1A] border border-[#1C1B1A]/25 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 hover:bg-[#1C1B1A] hover:text-white transition-all duration-300"
+                className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs tracking-[0.18em] uppercase text-folio-ink border border-folio-ink/25 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 hover:bg-folio-ink hover:text-folio-surface transition-all duration-300"
               >
                 CV
                 <span aria-hidden="true">↗</span>
               </a>
+              <ThemeToggle />
               <Button
                 variant="ghost"
                 className="p-0 bg-transparent hover:bg-transparent text-2xl"
@@ -297,21 +299,24 @@ export default function Hero() {
         {isMenuOpen && (
           <div
             ref={menuRef}
-            className="fixed inset-0 z-[100] bg-[#e8defa] text-[#1a1a1a] overflow-y-auto"
+            className="fixed inset-0 z-[100] bg-folio-menu text-folio-menu-ink overflow-y-auto"
           >
             <div className="flex flex-col h-full min-h-screen">
               {/* Top bar */}
-              <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-black/10">
+              <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-folio-menu-ink/10">
                 <span className="text-[10px] sm:text-xs tracking-widest uppercase">
                   {PERSONAL_INFO.name || "Portfolio"}
                 </span>
-                <button
-                  aria-label="Close menu"
-                  className="text-2xl sm:text-3xl leading-none bg-transparent hover:bg-transparent"
-                  onClick={closeMenu}
-                >
-                  -
-                </button>
+                <div className="flex items-center gap-3">
+                  <ThemeToggle />
+                  <button
+                    aria-label="Close menu"
+                    className="text-2xl sm:text-3xl leading-none bg-transparent hover:bg-transparent"
+                    onClick={closeMenu}
+                  >
+                    -
+                  </button>
+                </div>
               </div>
 
               {/* Center menu items - stacked on mobile, scattered on desktop */}
@@ -435,12 +440,12 @@ export default function Hero() {
               </div>
 
               {/* Bottom socials */}
-              <div className="grid grid-cols-4 border-t border-black/10">
+              <div className="grid grid-cols-4 border-t border-folio-menu-ink/10">
                 <a
                   href="https://www.linkedin.com/in/harsh-verma-develop/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-black/10 border-r"
+                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-folio-menu-ink/10 border-r"
                 >
                   LinkedIn
                 </a>
@@ -448,7 +453,7 @@ export default function Hero() {
                   href="https://www.instagram.com/fanggore/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-black/10 border-r"
+                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-folio-menu-ink/10 border-r"
                 >
                   Instagram
                 </a>
@@ -456,7 +461,7 @@ export default function Hero() {
                   href="https://x.com/fanghttp"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-black/10 border-r"
+                  className="overlay-social text-center py-2.5 sm:py-3 text-[10px] sm:text-xs uppercase tracking-wider border-folio-menu-ink/10 border-r"
                 >
                   Twitter
                 </a>
@@ -482,7 +487,7 @@ export default function Hero() {
               className="block w-full max-w-[600px] sm:max-w-[720px] md:max-w-[1200px] h-auto"
             />
             {/* Small italic caption below image */}
-            <p className="block mt-2 sm:mt-3 text-[10px] sm:text-xs italic text-[#4A4947] text-center px-4">
+            <p className="block mt-2 sm:mt-3 text-[10px] sm:text-xs italic text-folio-muted text-center px-4">
               dont take the content serious im still building
             </p>
           </div>
@@ -490,7 +495,7 @@ export default function Hero() {
           {/* Content wrapper - positioned below image on mobile, absolute on desktop */}
           <div className="relative mt-8 sm:mt-10 md:mt-[280px] lg:mt-[320px]">
             {/* Headline */}
-            <h1 className="text-[#1C1B1A] font-black tracking-tight leading-[1.3] sm:leading-[1.1] text-2xl sm:text-4xl md:text-5xl lg:text-6xl" style={{ fontFamily: "'Brimful', serif", letterSpacing: '0.05em' }}>
+            <h1 className="text-folio-ink font-black tracking-tight leading-[1.3] sm:leading-[1.1] text-2xl sm:text-4xl md:text-5xl lg:text-6xl" style={{ fontFamily: "'Brimful', serif", letterSpacing: '0.05em' }}>
               <SplitText
                 text="Overclocked & emotionally"
                 className="block"
@@ -509,13 +514,13 @@ export default function Hero() {
 
             {/* Subcopy */}
             <div ref={subcopyRef} className="mt-3 sm:mt-4 md:mt-5 max-w-2xl">
-              <p className="text-[#4A4947] text-base sm:text-lg md:text-xl leading-relaxed">
+              <p className="text-folio-muted text-base sm:text-lg md:text-xl leading-relaxed">
                 Track commits, uptime, chaos levels, and questionable life choices
                 all in one dangerously clean interface.A mildly unhinged visual
                 diary of my late nights, caffeine decisions, and the "one last
                 commit" that turned into fifteen.
               </p>
-              <p className="text-[#4A4947] text-base sm:text-lg md:text-xl leading-relaxed mt-2">
+              <p className="text-folio-muted text-base sm:text-lg md:text-xl leading-relaxed mt-2">
                 Warning: May cause productivity, obsession, and an unhealthy
                 attachment to green squares.
               </p>
@@ -524,7 +529,7 @@ export default function Hero() {
             {/* CTA pill */}
             <a
               href="#projects"
-              className="mt-5 sm:mt-6 md:mt-8 w-full sm:w-auto sm:max-w-md rounded-full h-12 sm:h-14 md:h-16 bg-[#E6B25C] border border-[#D9A650] shadow-sm flex items-center justify-between px-4 sm:px-6 md:px-8 text-[#1C1B1A] transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer active:scale-95"
+              className="mt-5 sm:mt-6 md:mt-8 w-full sm:w-auto sm:max-w-md rounded-full h-12 sm:h-14 md:h-16 bg-folio-cta border border-folio-cta-border shadow-sm flex items-center justify-between px-4 sm:px-6 md:px-8 text-folio-ink transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer active:scale-95"
             >
               <span className="inline-flex items-center gap-2 font-medium text-sm sm:text-base md:text-lg">
                 <svg
@@ -539,7 +544,7 @@ export default function Hero() {
                 </svg>
                 Clone from GitHub
               </span>
-              <span className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full border border-[#1C1B1A] flex items-center justify-center shrink-0">
+              <span className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full border border-folio-ink flex items-center justify-center shrink-0">
                 <span className="text-lg sm:text-xl md:text-2xl">→</span>
               </span>
             </a>

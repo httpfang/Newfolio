@@ -11,6 +11,30 @@
   justify-content: center;
 }
 
+.dark .loader-container {
+  background: #16181f;
+}
+
+.dark .loader > span,
+.dark .base span:before,
+.dark .face,
+.dark .face:after,
+.dark .loader > span > span:nth-child(1),
+.dark .loader > span > span:nth-child(2),
+.dark .loader > span > span:nth-child(3),
+.dark .loader > span > span:nth-child(4),
+.dark .longfazers span {
+  background: #f2efe8;
+}
+
+.dark .base span {
+  border-right-color: #f2efe8;
+}
+
+.dark .base span:after {
+  border-right-color: #f2efe8;
+}
+
 .loader {
   position: absolute;
   top: 50%;

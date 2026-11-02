@@ -5,6 +5,7 @@ import ScrollFloat from "@/bits/ScrollFloat";
 import { useScrollCardReveal } from "@/bits/useScrollCardReveal";
 import Skills from "../Skill/Skills";
 import { FaLocationArrow } from "react-icons/fa";
+import { useTheme } from "@/hooks/useTheme";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,6 +103,7 @@ const MONTH_SHORT = [
 ];
 
 export default function Projects() {
+  const { colors, theme } = useTheme();
   const [githubData, setGithubData] = useState<GitHubProfile | null>(null);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -474,15 +476,15 @@ export default function Projects() {
 
     switch (level) {
       case 1:
-        return "#A9C987";
+        return theme === "dark" ? "#5F7A45" : "#A9C987";
       case 2:
-        return "#7DA651";
+        return theme === "dark" ? "#7DA651" : "#7DA651";
       case 3:
-        return "#4D7028";
+        return theme === "dark" ? "#A8C97A" : "#4D7028";
       case 4:
-        return "#2D5016";
+        return theme === "dark" ? "#D4E8B0" : colors.accent;
       default:
-        return "#E8E6E1";
+        return colors.heatmapEmpty;
     }
   };
 
@@ -519,8 +521,8 @@ export default function Projects() {
 
   if (profileLoading) {
     return (
-      <section className="min-h-screen bg-[#F5F3EE] flex items-center justify-center">
-        <div className="text-[#2D5016] text-2xl font-light animate-pulse">
+      <section className="min-h-screen bg-folio-section flex items-center justify-center">
+        <div className="text-folio-accent text-2xl font-light animate-pulse">
           Loading projects...
         </div>
       </section>
@@ -531,13 +533,13 @@ export default function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F5F3EE] relative overflow-hidden scroll-mt-[70px]"
+      className="pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-folio-section relative overflow-hidden scroll-mt-[70px]"
     >
       <div
         className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage:
-            "linear-gradient(#2D5016 1px, transparent 1px), linear-gradient(90deg, #2D5016 1px, transparent 1px)",
+            `linear-gradient(${colors.accent} 1px, transparent 1px), linear-gradient(90deg, ${colors.accent} 1px, transparent 1px)`,
           backgroundSize: "60px 60px",
         }}
       />
@@ -551,17 +553,17 @@ export default function Projects() {
             scrollEnd="bottom bottom-=40%"
             stagger={0.03}
             containerClassName="my-0"
-            textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
+            textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-folio-accent leading-[0.9] tracking-tighter"
             textStyle={{ fontFamily: "'Brimful', serif", letterSpacing: '0.05em' }}
           >
             PROJECTS
           </ScrollFloat>
           <div className="flex items-center gap-3 mt-4">
-            <div className="h-px w-12 bg-[#2D5016] opacity-30"></div>
-            <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">
+            <div className="h-px w-12 bg-folio-accent opacity-30"></div>
+            <div className="text-folio-accent text-sm opacity-40 tracking-[0.3em]">
               GITHUB
               </div>
-            <div className="flex-1 h-px bg-[#2D5016] opacity-30"></div>
+            <div className="flex-1 h-px bg-folio-accent opacity-30"></div>
               </div>
             </div>
 
@@ -580,10 +582,10 @@ export default function Projects() {
                     alt="GitHub Profile"
                     className="w-full h-full object-cover rounded-3xl shadow-[0_20px_60px_rgb(45,80,22,0.15)] group-hover:shadow-[0_25px_70px_rgb(45,80,22,0.25)] transition-all duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-[#2D5016] opacity-0 group-hover:opacity-10 rounded-3xl transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-folio-accent opacity-0 group-hover:opacity-10 rounded-3xl transition-opacity duration-500"></div>
                 </div>
 
-                <div className="absolute -bottom-3 -right-3 bg-[#2D5016] text-white px-4 py-2 rounded-full text-xs font-semibold shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="absolute -bottom-3 -right-3 bg-folio-accent text-white px-4 py-2 rounded-full text-xs font-semibold shadow-lg group-hover:scale-110 transition-transform duration-300">
                   VIEW PROFILE
               </div>
               </div>
@@ -591,7 +593,7 @@ export default function Projects() {
 
             <div className="flex-1">
               {/* Modern Stats Bar */}
-              <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-8 border border-[#2D5016]/10 mb-6">
+              <div className="bg-folio-card/50 backdrop-blur-sm rounded-2xl p-8 border border-folio-accent/10 mb-6">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
                   {stats.map((stat, index) => (
                     <div
@@ -605,11 +607,11 @@ export default function Projects() {
                         <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
                           {stat.icon}
                         </span>
-                        <span className="text-4xl lg:text-5xl font-black text-[#2D5016] tracking-tight">
+                        <span className="text-4xl lg:text-5xl font-black text-folio-accent tracking-tight">
                           {stat.value}
                   </span>
               </div>
-                      <div className="text-xs font-bold text-[#2D5016]/50 tracking-[0.2em] uppercase">
+                      <div className="text-xs font-bold text-folio-accent/50 tracking-[0.2em] uppercase">
                         {stat.label}
             </div>
           </div>
@@ -658,8 +660,8 @@ export default function Projects() {
 
               {/* Bio Section */}
               {githubData?.bio && (
-                <div className="bg-white/30 backdrop-blur-sm rounded-2xl p-6 border border-[#2D5016]/10">
-                  <p className="text-[#2D5016] text-base font-light leading-relaxed">
+                <div className="bg-folio-card/30 backdrop-blur-sm rounded-2xl p-6 border border-folio-accent/10">
+                  <p className="text-folio-accent text-base font-light leading-relaxed">
                     {githubData.bio}
                   </p>
                 </div>
@@ -669,7 +671,7 @@ export default function Projects() {
         </div>
 
         <div className="mb-16">
-          <h2 className="text-3xl lg:text-4xl font-serif text-[#2D5016] mb-8 tracking-tight">
+          <h2 className="text-3xl lg:text-4xl font-serif text-folio-accent mb-8 tracking-tight">
             Latest Repositories
           </h2>
 
@@ -746,16 +748,16 @@ export default function Projects() {
           </div>
 
         <div className="mt-20">
-          <h2 className="text-3xl lg:text-4xl font-serif text-[#2D5016] mb-3 tracking-tight">
+          <h2 className="text-3xl lg:text-4xl font-serif text-folio-accent mb-3 tracking-tight">
             Contribution Activity
           </h2>
-          <p className="text-sm text-[#2D5016]/65 mb-8 max-w-2xl">
+          <p className="text-sm text-folio-accent/65 mb-8 max-w-2xl">
             Live GitHub progress tree for{" "}
             <a
               href={`https://github.com/${GITHUB_USERNAME}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 hover:text-[#2D5016]"
+              className="underline underline-offset-2 hover:text-folio-accent"
             >
               @{GITHUB_USERNAME}
             </a>
@@ -764,18 +766,18 @@ export default function Projects() {
           </p>
 
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-            <div className="text-sm text-[#2D5016]/80">
+            <div className="text-sm text-folio-accent/80">
               Total in {selectedYear}:{" "}
-              <span className="font-semibold text-[#2D5016]">
+              <span className="font-semibold text-folio-accent">
                 {contributionsLoading ? "…" : contributionTotal.toLocaleString()}
               </span>
             </div>
-            <label className="text-sm text-[#2D5016]/70 flex items-center gap-2">
+            <label className="text-sm text-folio-accent/70 flex items-center gap-2">
               Year
               <select
                 value={selectedYear}
                 onChange={(event) => setSelectedYear(Number(event.target.value))}
-                className="border border-[#2D5016]/20 rounded-lg bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2D5016]/40"
+                className="border border-folio-accent/20 rounded-lg bg-folio-card text-folio-ink px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-folio-accent/40"
               >
                 {availableYears.map((year) => (
                   <option key={year} value={year}>
@@ -802,12 +804,12 @@ export default function Projects() {
               ].map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-2xl border border-[#2D5016]/10 bg-white/50 px-4 py-3"
+                  className="rounded-2xl border border-folio-accent/10 bg-folio-card/50 px-4 py-3"
                 >
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-[#2D5016]/50">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-folio-accent/50">
                     {stat.label}
                   </p>
-                  <p className="text-2xl font-serif text-[#2D5016] mt-1">
+                  <p className="text-2xl font-serif text-folio-accent mt-1">
                     {stat.value.toLocaleString()}
                   </p>
                 </div>
@@ -815,24 +817,24 @@ export default function Projects() {
             </div>
           )}
 
-          <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-3 sm:p-6 md:p-8 border border-[#2D5016]/10">
+          <div className="bg-folio-card/40 backdrop-blur-sm rounded-3xl p-3 sm:p-6 md:p-8 border border-folio-accent/10">
             {contributionError ? (
-              <div className="text-center text-sm text-[#2D5016]/70 py-6">
+              <div className="text-center text-sm text-folio-accent/70 py-6">
                 {contributionError}
               </div>
             ) : contributionsLoading ? (
-              <div className="text-center text-sm text-[#2D5016]/70 py-6">
+              <div className="text-center text-sm text-folio-accent/70 py-6">
                 Fetching contribution data…
               </div>
             ) : contributionWeeks.length === 0 ? (
-              <div className="text-center text-sm text-[#2D5016]/70 py-6">
+              <div className="text-center text-sm text-folio-accent/70 py-6">
                 No contribution data for {selectedYear}.
               </div>
             ) : (
               <div ref={calendarRef} className="relative w-full overflow-visible">
                 {hoveredDay && (
                   <div
-                    className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] rounded bg-[#2D5016] px-2.5 py-1.5 text-[11px] text-white shadow-lg whitespace-nowrap"
+                    className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] rounded bg-folio-accent px-2.5 py-1.5 text-[11px] text-white shadow-lg whitespace-nowrap"
                     style={{ left: tooltipPos.x, top: tooltipPos.y }}
                   >
                     {hoveredDay.count} contribution
@@ -840,7 +842,7 @@ export default function Projects() {
                     {formatDate(hoveredDay.date)
                       ? ` on ${formatDate(hoveredDay.date)}`
                       : ""}
-                    <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-[#2D5016]" />
+                    <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-folio-accent" />
                   </div>
                 )}
 
@@ -856,7 +858,7 @@ export default function Projects() {
                     return (
                       <div
                         key={`month-${weekIndex}`}
-                        className="text-[8px] sm:text-[10px] text-[#2D5016]/55 h-3 sm:h-4 overflow-hidden"
+                        className="text-[8px] sm:text-[10px] text-folio-accent/55 h-3 sm:h-4 overflow-hidden"
                       >
                         {month?.label ?? ""}
                       </div>
@@ -874,7 +876,7 @@ export default function Projects() {
                     {WEEKDAY_LABELS.map((label, index) => (
                       <div
                         key={`weekday-${index}`}
-                        className="aspect-square text-[7px] sm:text-[9px] leading-none text-[#2D5016]/55 flex items-center justify-end"
+                        className="aspect-square text-[7px] sm:text-[9px] leading-none text-folio-accent/55 flex items-center justify-end"
                       >
                         {label}
                       </div>
@@ -894,7 +896,7 @@ export default function Projects() {
                             className={`w-full aspect-square rounded-[1px] sm:rounded-[2px] min-w-0 ${
                               isPad
                                 ? "opacity-0 pointer-events-none"
-                                : "cursor-pointer ring-0 hover:ring-1 hover:ring-[#2D5016]/50 hover:ring-offset-1 hover:ring-offset-[#F5F3EE]"
+                                : "cursor-pointer ring-0 hover:ring-1 hover:ring-folio-accent/50 hover:ring-offset-1 hover:ring-offset-folio-section"
                             }`}
                             style={{
                               backgroundColor: isPad
@@ -922,14 +924,14 @@ export default function Projects() {
               </div>
             )}
 
-            <div className="flex items-center gap-4 mt-6 text-xs text-[#2D5016]/60">
+            <div className="flex items-center gap-4 mt-6 text-xs text-folio-accent/60">
               <span>Less</span>
               <div className="flex gap-1">
-                <div className="w-3 h-3 rounded-[2px] bg-[#E8E6E1]"></div>
+                <div className="w-3 h-3 rounded-[2px] bg-folio-heatmap-empty"></div>
                 <div className="w-3 h-3 rounded-[2px] bg-[#A9C987]"></div>
                 <div className="w-3 h-3 rounded-[2px] bg-[#7DA651]"></div>
                 <div className="w-3 h-3 rounded-[2px] bg-[#4D7028]"></div>
-                <div className="w-3 h-3 rounded-[2px] bg-[#2D5016]"></div>
+                <div className="w-3 h-3 rounded-[2px] bg-folio-accent"></div>
               </div>
               <span>More</span>
             </div>
@@ -937,7 +939,7 @@ export default function Projects() {
 
         </div>
 
-        <p className="mt-10 text-center text-sm italic text-[#2D5016]/70">
+        <p className="mt-10 text-center text-sm italic text-folio-accent/70">
           ps: my og repo ammmmmmm, i dont have access any more 😭
         </p>
 

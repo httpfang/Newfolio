@@ -169,7 +169,7 @@ export default function Contact() {
     <section
       ref={sectionRef}
       id="contact"
-      className="min-h-screen bg-[#fafafa] px-6 py-20 md:px-12 lg:px-24"
+      className="min-h-screen bg-folio-section text-folio-ink px-6 py-20 md:px-12 lg:px-24 transition-colors duration-500"
     >
       <style>{`
         .reveal-element {
@@ -193,8 +193,9 @@ export default function Contact() {
         .form-textarea,
         .form-select {
           border: none;
-          border-bottom: 1px solid #000;
+          border-bottom: 1px solid hsl(var(--folio-ink));
           background: transparent;
+          color: hsl(var(--folio-ink));
           padding: 12px 0;
           width: 100%;
           font-size: 16px;
@@ -205,7 +206,7 @@ export default function Contact() {
         .form-textarea:focus,
         .form-select:focus {
           outline: none;
-          border-bottom-color: #666;
+          border-bottom-color: hsl(var(--folio-muted));
         }
 
         .form-input.error,
@@ -226,8 +227,8 @@ export default function Contact() {
         }
 
         .submit-btn {
-          background: #000;
-          color: #fff;
+          background: hsl(var(--folio-ink));
+          color: hsl(var(--folio-surface));
           padding: 14px 48px;
           border-radius: 50px;
           border: none;

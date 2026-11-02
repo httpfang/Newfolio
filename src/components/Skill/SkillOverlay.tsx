@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { PERSONAL_INFO } from "@/constants/constants";
 import SkillItem from "./SkillItem";
+import { useTheme } from "@/hooks/useTheme";
 
 type SkillCategory = 'frontend' | 'backend' | 'tool';
 
@@ -21,6 +22,7 @@ export default function SkillOverlay({
   categoryLabel,
   onClose,
 }: SkillOverlayProps) {
+  const { colors } = useTheme();
   const overlayRef = useRef<HTMLDivElement>(null);
 
   // Animate overlay open/close
@@ -121,7 +123,7 @@ export default function SkillOverlay({
   const overlayContent = (
     <div
       ref={overlayRef}
-      className="fixed inset-0 text-[#1a1a1a] overflow-y-auto"
+      className="fixed inset-0 text-folio-menu-ink overflow-y-auto"
       style={{ 
         isolation: 'isolate',
         position: 'fixed',
@@ -132,19 +134,19 @@ export default function SkillOverlay({
         width: '100vw',
         height: '100vh',
         zIndex: 9999,
-        backgroundColor: '#e8defa',
-        background: '#e8defa',
+        backgroundColor: colors.menu,
+        background: colors.menu,
         willChange: 'opacity',
       }}
     >
       <div className="relative flex flex-col h-full">
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-black/10">
-          <span className="text-xs sm:text-sm tracking-widest uppercase font-serif text-[#1a1a1a]">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-folio-menu-ink/10">
+          <span className="text-xs sm:text-sm tracking-widest uppercase font-serif text-folio-menu-ink">
             {PERSONAL_INFO.name || 'Portfolio'}
           </span>
           <button
             aria-label="Close skills overlay"
-            className="close-btn text-2xl sm:text-3xl leading-none bg-transparent hover:bg-transparent font-serif text-[#1a1a1a] touch-manipulation active:scale-95 transition-transform"
+            className="close-btn text-2xl sm:text-3xl leading-none bg-transparent hover:bg-transparent font-serif text-folio-menu-ink touch-manipulation active:scale-95 transition-transform"
             onClick={handleClose}
             onMouseEnter={(e) => {
               gsap.to(e.currentTarget, {
@@ -170,7 +172,7 @@ export default function SkillOverlay({
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-12 md:py-20 overflow-y-auto">
-          <h3 className="overlay-title text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-serif italic tracking-wide mb-8 sm:mb-12 md:mb-16 text-center text-[#1a1a1a] px-4">
+          <h3 className="overlay-title text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-serif italic tracking-wide mb-8 sm:mb-12 md:mb-16 text-center text-folio-menu-ink px-4">
             {categoryLabel.toUpperCase()}
           </h3>
 

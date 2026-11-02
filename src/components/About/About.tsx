@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrollFloat from "@/bits/ScrollFloat";
 import PixelTransition from "@/bits/PixelTransition";
 import { useScrollCardReveal } from "@/bits/useScrollCardReveal";
+import { useTheme } from "@/hooks/useTheme";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,6 +42,7 @@ const aboutSections = [
 ];
 
 export default function About() {
+  const { colors } = useTheme();
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const aboutSectionRef = useRef<HTMLElement>(null);
   const rightParagraphRef = useRef<HTMLParagraphElement>(null);
@@ -105,13 +107,13 @@ export default function About() {
     <section
       ref={aboutSectionRef}
       id="about"
-      className="mt-0 sm:mt-[50px] md:mt-[70px] pt-8 sm:pt-10 md:pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-[#F5F3EE] relative overflow-hidden"
+      className="mt-0 sm:mt-[50px] md:mt-[70px] pt-8 sm:pt-10 md:pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-folio-section relative overflow-hidden"
     >
       {/* Subtle background pattern */}
       <div
         className="absolute inset-0 opacity-[0.02]"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #2D5016 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, ${colors.accent} 1px, transparent 0)`,
           backgroundSize: "40px 40px",
         }}
       ></div>
@@ -127,17 +129,17 @@ export default function About() {
               scrollEnd="bottom bottom-=40%"
               stagger={0.03}
               containerClassName="my-0"
-              textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
+              textClassName="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif text-folio-accent leading-[0.9] tracking-tighter"
               textStyle={{ fontFamily: "'Brimful', serif", letterSpacing: '0.05em' }}
             >
               ABOUT ME
             </ScrollFloat>
             <div className="flex items-center gap-3 mt-3 sm:mt-4">
-              <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
-              <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">
+              <div className="h-[1px] w-12 bg-folio-accent opacity-30"></div>
+              <div className="text-folio-accent text-sm opacity-40 tracking-[0.3em]">
                 ***
               </div>
-              <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
+              <div className="h-[1px] w-12 bg-folio-accent opacity-30"></div>
             </div>
 
             {/* Rectangular Image Placeholder */}
@@ -158,7 +160,7 @@ export default function About() {
                   />
                 }
                 gridSize={7}
-                pixelColor="#2D5016"
+                pixelColor={colors.accent}
                 animationStepDuration={0.3}
                 once={false}
                 className="w-full bg-transparent !border-0 rounded-lg"
@@ -172,18 +174,18 @@ export default function About() {
           <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-0 lg:max-w-md xl:max-w-lg lg:text-right">
             <p
               ref={rightParagraphRef}
-              className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-serif text-[#2D5016] leading-[1.3] tracking-tight"
+              className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-serif text-folio-accent leading-[1.3] tracking-tight"
             >
               I'm most inspired by technology, problem-solving and creative
               coding. I can't imagine my life without building meaningful
               digital experiences. Have to say all of these right ( lol🤦‍♂️)
             </p>
             <div className="flex items-center gap-3 mt-4 sm:mt-5 lg:justify-end">
-              <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
-              <div className="text-[#2D5016] text-sm opacity-40 tracking-[0.3em]">
+              <div className="h-[1px] w-12 bg-folio-accent opacity-30"></div>
+              <div className="text-folio-accent text-sm opacity-40 tracking-[0.3em]">
                 ***
               </div>
-              <div className="h-[1px] w-12 bg-[#2D5016] opacity-30"></div>
+              <div className="h-[1px] w-12 bg-folio-accent opacity-30"></div>
             </div>
           </div>
         </div>
@@ -210,7 +212,7 @@ export default function About() {
                 />
               }
               gridSize={7}
-              pixelColor="#2D5016"
+              pixelColor={colors.accent}
               animationStepDuration={0.3}
               once={false}
               className="w-full rounded-2xl bg-transparent !border-0"
@@ -237,15 +239,15 @@ export default function About() {
             >
               <div className="section-content flex gap-4 items-start p-5 rounded-xl">
                 <div className="shrink-0 relative">
-                  <span className="text-3xl font-extralight text-[#2D5016]/20">
+                  <span className="text-3xl font-extralight text-folio-accent/20">
                     {section.number}
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-[11px] font-semibold text-[#2D5016] mb-3 tracking-[0.15em] uppercase">
+                  <h3 className="text-[11px] font-semibold text-folio-accent mb-3 tracking-[0.15em] uppercase">
                     {section.title}
                   </h3>
-                  <p className="text-[13px] text-[#2D5016]/80 leading-relaxed font-light tracking-wide">
+                  <p className="text-[13px] text-folio-accent/80 leading-relaxed font-light tracking-wide">
                     {section.text}
                   </p>
                 </div>
@@ -264,15 +266,15 @@ export default function About() {
                 className="section-content flex gap-4 p-5 rounded-xl"
               >
                 <div className="shrink-0">
-                  <span className="text-3xl font-extralight text-[#2D5016]/20">
+                  <span className="text-3xl font-extralight text-folio-accent/20">
                     {section.number}
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-[11px] font-semibold text-[#2D5016] mb-3 tracking-[0.15em] uppercase">
+                  <h3 className="text-[11px] font-semibold text-folio-accent mb-3 tracking-[0.15em] uppercase">
                     {section.title}
                   </h3>
-                  <p className="text-[13px] text-[#2D5016]/80 leading-relaxed font-light tracking-wide">
+                  <p className="text-[13px] text-folio-accent/80 leading-relaxed font-light tracking-wide">
                     {section.text}
                   </p>
                 </div>
@@ -301,7 +303,7 @@ export default function About() {
                   />
                 }
                 gridSize={7}
-                pixelColor="#2D5016"
+                pixelColor={colors.accent}
                 animationStepDuration={0.3}
                 once={false}
                 className="rounded-3xl bg-transparent !border-0"
@@ -335,7 +337,7 @@ export default function About() {
                 />
               }
               gridSize={7}
-              pixelColor="#2D5016"
+              pixelColor={colors.accent}
               animationStepDuration={0.3}
               once={true}
               className="rounded-3xl bg-transparent !border-0"

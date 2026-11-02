@@ -67,7 +67,7 @@ export const imageBasedSkills = ['GSAP', 'Framer Motion', 'Drizzle ORM', 'Clerk'
 
 // Helper function to get icon for a skill
 export const getSkillIcon = (skillName: string): React.ReactNode => {
-  return skillIconMap[skillName] || <span className="font-bold text-[#1a1a1a]">{skillName}</span>;
+  return skillIconMap[skillName] || <span className="font-bold text-folio-ink">{skillName}</span>;
 };
 
 // Helper function to get icon for LogoLoop (with different color scheme)
@@ -76,6 +76,6 @@ export const getSkillIconForLoop = (skillName: string): React.ReactNode => {
   if (icon) {
     return icon;
   }
-  return <span className="font-bold text-[#2D5016]">{skillName}</span>;
+  return <span className="font-bold text-folio-accent">{skillName}</span>;
 };
 

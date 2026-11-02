@@ -53,8 +53,8 @@ function App() {
   return (
     <>
       <Loader />
-      <div className="min-h-screen bg-[#5865F2] p-6 md:p-8">
-        <div className="w-full min-h-[calc(100vh-3rem)] md:min-h=[calc(100vh-4rem)] bg-[#F5F5F5] rounded-3xl shadow-2xl overflow-hidden border-4 border-[#5865F2]">
+      <div className="min-h-screen bg-folio-frame p-6 md:p-8 transition-colors duration-500">
+        <div className="w-full min-h-[calc(100vh-3rem)] md:min-h-[calc(100vh-4rem)] bg-folio-surface rounded-3xl shadow-2xl overflow-hidden border-4 border-folio-frame transition-colors duration-500">
           <main>
             <Hero />
             <Suspense fallback={<SectionLoader />}>

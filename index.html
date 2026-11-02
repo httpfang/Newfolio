@@ -5,6 +5,16 @@
     <link rel="icon" type="image/jpeg" href="https://media.licdn.com/dms/image/v2/D5603AQEMnSYb1oo-UQ/profile-displayphoto-scale_200_200/B56Zfn.oG6GQAg-/0/1751943646266?e=1766016000&v=beta&t=V5kgTuD_LcAmH-9SBXkCh_IKxR24HDnz6EUXsspMaPE" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Harsh Verma - Full Time Typerrr...</title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var dark = stored === "dark" || (stored !== "light" && prefersDark);
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

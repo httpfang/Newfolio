@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import LogoLoop from "@/bits/LogoLoop";
 import SkillOverlay from "@/components/Skill/SkillOverlay";
 import { getSkillIconForLoop } from "@/components/Skill/skillIcons";
+import { useTheme } from "@/hooks/useTheme";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -80,6 +81,7 @@ const techLogos = SKILLS.map((skill) => {
 });
 
 export default function Skills() {
+  const { colors } = useTheme();
   // Skills section state and refs
   const [activeTab, setActiveTab] = useState<SkillCategory | null>(null);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
@@ -212,7 +214,7 @@ export default function Skills() {
               scrollEnd="bottom bottom-=40%"
               stagger={0.03}
               containerClassName="my-0"
-              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif text-[#2D5016] leading-[0.9] tracking-tighter"
+              textClassName="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif text-folio-accent leading-[0.9] tracking-tighter"
             >
               SKILLS
             </ScrollFloat>
@@ -226,25 +228,25 @@ export default function Skills() {
                 hoverSpeed={40}
                 scaleOnHover
                 fadeOut
-                fadeOutColor="#F5F3EE"
+                fadeOutColor={colors.section}
                 ariaLabel="Technology stack"
                 className="h-full"
               />
             </div>
           </div>
           <div className="divider-container flex items-center gap-2 sm:gap-3 mt-4">
-            <div className="h-px w-8 sm:w-12 bg-[#2D5016] opacity-30"></div>
-            <div className="text-[#2D5016] text-xs sm:text-sm opacity-40 tracking-[0.2em] sm:tracking-[0.3em]">
+            <div className="h-px w-8 sm:w-12 bg-folio-accent opacity-30"></div>
+            <div className="text-folio-accent text-xs sm:text-sm opacity-40 tracking-[0.2em] sm:tracking-[0.3em]">
               TECHNOLOGIES
             </div>
-            <div className="flex-1 h-px bg-[#2D5016] opacity-30"></div>
+            <div className="flex-1 h-px bg-folio-accent opacity-30"></div>
           </div>
         </div>
 
         {/* Skills Array Display */}
         <div className="flex items-center justify-center w-full mt-6 sm:mt-8 md:mt-12 px-4 sm:px-6">
-          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 font-mono text-xl sm:text-2xl md:text-4xl lg:text-5xl text-[#2D5016] flex-wrap justify-center">
-            <span className="text-[#2D5016]/60">[</span>
+          <div className="flex items-center gap-1.5 sm:gap-2 md:gap-4 font-mono text-xl sm:text-2xl md:text-4xl lg:text-5xl text-folio-accent flex-wrap justify-center">
+            <span className="text-folio-accent/60">[</span>
             {skillCategories.map((category, index) => {
               const refMap = {
                 frontend: frontendTabRef,
@@ -259,8 +261,8 @@ export default function Skills() {
                     ref={tabRef}
                     onClick={() => openOverlay(category)}
                     className={cn(
-                      'font-serif italic tracking-wide text-[#2D5016] cursor-pointer',
-                      'hover:text-[#2D5016]/70 active:scale-95 transition-colors duration-300',
+                      'font-serif italic tracking-wide text-folio-accent cursor-pointer',
+                      'hover:text-folio-accent/70 active:scale-95 transition-colors duration-300',
                       'select-none relative z-10 touch-manipulation',
                       'text-xl sm:text-2xl md:text-4xl lg:text-5xl'
                     )}
@@ -284,12 +286,12 @@ export default function Skills() {
                     />
                   </button>
                   {index < skillCategories.length - 1 && (
-                    <span className="text-[#2D5016]/60 mx-1 sm:mx-2 md:mx-4">,</span>
+                    <span className="text-folio-accent/60 mx-1 sm:mx-2 md:mx-4">,</span>
                   )}
                 </span>
               );
             })}
-            <span className="text-[#2D5016]/60">]</span>
+            <span className="text-folio-accent/60">]</span>
           </div>
         </div>
       </div>

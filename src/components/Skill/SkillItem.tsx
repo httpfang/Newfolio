@@ -2,12 +2,14 @@ import  { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { getSkillIcon, imageBasedSkills } from "@/components/Skill/skillIcons";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/hooks/useTheme";
 
 interface SkillItemProps {
   skill: string;
 }
 
 export default function SkillItem({ skill }: SkillItemProps) {
+  const { colors } = useTheme();
   const [isHovered, setIsHovered] = useState(false);
   const logoContainerRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
@@ -127,7 +129,7 @@ export default function SkillItem({ skill }: SkillItemProps) {
     <>
       <div
         ref={itemRef}
-        className="skill-item p-4 sm:p-5 rounded-[12px] border border-black/10 bg-white/50 backdrop-blur-sm relative touch-manipulation"
+        className="skill-item p-4 sm:p-5 rounded-[12px] border border-black/10 bg-folio-card/50 backdrop-blur-sm relative touch-manipulation"
         style={{
           boxShadow: '0 2px 8px rgba(26, 26, 26, 0.04), 0 4px 16px rgba(26, 26, 26, 0.02)',
         }}
@@ -174,7 +176,7 @@ export default function SkillItem({ skill }: SkillItemProps) {
           });
         }}
       >
-        <span className="text-lg sm:text-xl md:text-2xl font-medium text-[#1a1a1a] tracking-tight">
+        <span className="text-lg sm:text-xl md:text-2xl font-medium text-folio-menu-ink tracking-tight">
           {skill}
         </span>
       </div>
@@ -197,7 +199,7 @@ export default function SkillItem({ skill }: SkillItemProps) {
                 : "text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
             )}
             style={{
-              color: '#1a1a1a',
+              color: colors.ink,
             }}
           >
             {icon}
