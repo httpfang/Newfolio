@@ -493,13 +493,15 @@ export default function Projects() {
     let lastMonth = -1;
 
     contributionWeeks.forEach((week, weekIndex) => {
-      const firstDay = week.find((day) => day?.date);
+      // Skip pad cells so Invalid Dates don't shift month labels
+      const firstDay = week.find(
+        (day) => day?.date && !day.date.startsWith("pad-")
+      );
       if (!firstDay) return;
       const month = new Date(firstDay.date + "T00:00:00").getMonth();
-      if (month !== lastMonth) {
-        labels.push({ label: MONTH_SHORT[month], weekIndex });
-        lastMonth = month;
-      }
+      if (Number.isNaN(month) || month === lastMonth) return;
+      labels.push({ label: MONTH_SHORT[month], weekIndex });
+      lastMonth = month;
     });
 
     return labels;
@@ -846,113 +848,91 @@ export default function Projects() {
                   </div>
                 )}
 
-                {/* Horizontal scroll on narrow screens; cells keep a readable min size */}
-                <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-1 [-ms-overflow-style:none] [scrollbar-width:thin]">
+                {/*
+                  One CSS grid for months + weekdays + cells so every label
+                  sits on the same track as its row/column (GitHub-style).
+                */}
+                <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-1 [scrollbar-width:thin]">
                   <div
-                    className="inline-block w-full align-top"
+                    className="grid w-max [--cell:10px] sm:[--cell:11px] md:[--cell:12px] lg:[--cell:13px] [--label:22px] sm:[--label:28px] [--gap:2px] sm:[--gap:3px]"
                     style={{
-                      minWidth: `max(100%, calc(1.75rem + ${contributionWeeks.length} * 0.7rem))`,
+                      gap: "var(--gap)",
+                      gridTemplateColumns: `var(--label) repeat(${contributionWeeks.length}, var(--cell))`,
+                      gridTemplateRows: `14px repeat(7, var(--cell))`,
                     }}
                   >
-                    <div
-                      className="grid mb-1"
-                      style={{
-                        gap: "clamp(2px, 0.35vw, 3px)",
-                        gridTemplateColumns: `1.75rem repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
-                      }}
-                    >
-                      <div />
-                      {contributionWeeks.map((_, weekIndex) => {
-                        const month = monthLabels.find(
-                          (m) => m.weekIndex === weekIndex
-                        );
-                        return (
-                          <div
-                            key={`month-${weekIndex}`}
-                            className="relative h-3 sm:h-4 overflow-visible"
-                          >
-                            {month?.label ? (
-                              <span className="absolute left-0 top-0 text-[8px] sm:text-[10px] leading-none text-folio-accent/55 whitespace-nowrap">
-                                {month.label}
-                              </span>
-                            ) : null}
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    <div
-                      className="grid"
-                      style={{
-                        gap: "clamp(2px, 0.35vw, 3px)",
-                        gridTemplateColumns: `1.75rem repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
-                      }}
-                    >
-                      <div
-                        className="grid"
-                        style={{
-                          gap: "clamp(2px, 0.35vw, 3px)",
-                          gridTemplateRows: "repeat(7, minmax(0, 1fr))",
-                        }}
-                      >
-                        {WEEKDAY_LABELS.map((label, index) => (
-                          <div
-                            key={`weekday-${index}`}
-                            className="aspect-square min-h-0 text-[7px] sm:text-[9px] leading-none text-folio-accent/55 flex items-center justify-end pr-1"
-                          >
-                            <span className="hidden min-[400px]:inline">
-                              {label}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {contributionWeeks.map((week, weekIndex) => (
+                    {/* Month row */}
+                    <div />
+                    {contributionWeeks.map((_, weekIndex) => {
+                      const month = monthLabels.find(
+                        (m) => m.weekIndex === weekIndex
+                      );
+                      return (
                         <div
-                          key={`week-${weekIndex}`}
-                          className="grid min-w-0"
-                          style={{
-                            gap: "clamp(2px, 0.35vw, 3px)",
-                            gridTemplateRows: "repeat(7, minmax(0, 1fr))",
-                          }}
+                          key={`month-${weekIndex}`}
+                          className="relative overflow-visible"
                         >
-                          {week.map((day, dayIndex) => {
-                            const isPad = day.date.startsWith("pad-");
+                          {month?.label ? (
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px] sm:text-[10px] leading-none text-folio-accent/55 whitespace-nowrap">
+                              {month.label}
+                            </span>
+                          ) : null}
+                        </div>
+                      );
+                    })}
+
+                    {/* Weekday labels + contribution cells, row by row */}
+                    {WEEKDAY_LABELS.map((label, dayIndex) => (
+                      <div key={`row-${dayIndex}`} className="contents">
+                        <div className="flex items-center justify-end pr-1 text-[9px] leading-none text-folio-accent/55">
+                          <span className="hidden min-[380px]:inline">
+                            {label}
+                          </span>
+                        </div>
+                        {contributionWeeks.map((week, weekIndex) => {
+                          const day = week[dayIndex];
+                          if (!day) {
                             return (
                               <div
-                                key={`${day.date}-${dayIndex}`}
-                                className={`w-full aspect-square min-w-0 min-h-0 rounded-[1px] sm:rounded-[2px] ${
-                                  isPad
-                                    ? "opacity-0 pointer-events-none"
-                                    : "cursor-pointer hover:outline hover:outline-1 hover:outline-folio-accent/50 hover:outline-offset-1"
-                                }`}
-                                style={{
-                                  backgroundColor: isPad
-                                    ? "transparent"
-                                    : getContributionColor(day),
-                                }}
-                                onMouseEnter={(event) => {
-                                  if (isPad || !calendarRef.current) return;
-                                  const cell =
-                                    event.currentTarget.getBoundingClientRect();
-                                  const parent =
-                                    calendarRef.current.getBoundingClientRect();
-                                  setHoveredDay(day);
-                                  setTooltipPos({
-                                    x:
-                                      cell.left +
-                                      cell.width / 2 -
-                                      parent.left,
-                                    y: cell.top - parent.top,
-                                  });
-                                }}
-                                onMouseLeave={() => setHoveredDay(null)}
+                                key={`empty-${weekIndex}-${dayIndex}`}
                               />
                             );
-                          })}
-                        </div>
-                      ))}
-                    </div>
+                          }
+                          const isPad = day.date.startsWith("pad-");
+                          return (
+                            <div
+                              key={`${day.date}-${dayIndex}`}
+                              className={`rounded-[2px] ${
+                                isPad
+                                  ? "opacity-0 pointer-events-none"
+                                  : "cursor-pointer hover:outline hover:outline-1 hover:outline-folio-accent/50 hover:outline-offset-[1px]"
+                              }`}
+                              style={{
+                                width: "var(--cell)",
+                                height: "var(--cell)",
+                                backgroundColor: isPad
+                                  ? "transparent"
+                                  : getContributionColor(day),
+                              }}
+                              onMouseEnter={(event) => {
+                                if (isPad || !calendarRef.current) return;
+                                const cell =
+                                  event.currentTarget.getBoundingClientRect();
+                                const parent =
+                                  calendarRef.current.getBoundingClientRect();
+                                setHoveredDay(day);
+                                setTooltipPos({
+                                  x:
+                                    cell.left + cell.width / 2 - parent.left,
+                                  y: cell.top - parent.top,
+                                });
+                              }}
+                              onMouseLeave={() => setHoveredDay(null)}
+                            />
+                          );
+                        })}
+                      </div>
+                    ))}
                   </div>
                 </div>
 
