@@ -831,7 +831,7 @@ export default function Projects() {
                 No contribution data for {selectedYear}.
               </div>
             ) : (
-              <div ref={calendarRef} className="relative w-full overflow-visible">
+              <div ref={calendarRef} className="relative w-full">
                 {hoveredDay && (
                   <div
                     className="pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-[calc(100%+8px)] rounded bg-folio-accent px-2.5 py-1.5 text-[11px] text-white shadow-lg whitespace-nowrap"
@@ -846,92 +846,130 @@ export default function Projects() {
                   </div>
                 )}
 
-                <div
-                  className="grid mb-1 gap-[2px] sm:gap-[3px]"
-                  style={{
-                    gridTemplateColumns: `18px repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
-                  }}
-                >
-                  <div />
-                  {contributionWeeks.map((_, weekIndex) => {
-                    const month = monthLabels.find((m) => m.weekIndex === weekIndex);
-                    return (
-                      <div
-                        key={`month-${weekIndex}`}
-                        className="text-[8px] sm:text-[10px] text-folio-accent/55 h-3 sm:h-4 overflow-hidden"
-                      >
-                        {month?.label ?? ""}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div
-                  className="grid gap-[2px] sm:gap-[3px]"
-                  style={{
-                    gridTemplateColumns: `18px repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
-                  }}
-                >
-                  <div className="flex flex-col gap-[2px] sm:gap-[3px]">
-                    {WEEKDAY_LABELS.map((label, index) => (
-                      <div
-                        key={`weekday-${index}`}
-                        className="aspect-square text-[7px] sm:text-[9px] leading-none text-folio-accent/55 flex items-center justify-end"
-                      >
-                        {label}
-                      </div>
-                    ))}
-                  </div>
-
-                  {contributionWeeks.map((week, weekIndex) => (
+                {/* Horizontal scroll on narrow screens; cells keep a readable min size */}
+                <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-1 [-ms-overflow-style:none] [scrollbar-width:thin]">
+                  <div
+                    className="inline-block w-full align-top"
+                    style={{
+                      minWidth: `max(100%, calc(1.75rem + ${contributionWeeks.length} * 0.7rem))`,
+                    }}
+                  >
                     <div
-                      key={`week-${weekIndex}`}
-                      className="flex flex-col gap-[2px] sm:gap-[3px] min-w-0"
+                      className="grid mb-1"
+                      style={{
+                        gap: "clamp(2px, 0.35vw, 3px)",
+                        gridTemplateColumns: `1.75rem repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
+                      }}
                     >
-                      {week.map((day, dayIndex) => {
-                        const isPad = day.date.startsWith("pad-");
+                      <div />
+                      {contributionWeeks.map((_, weekIndex) => {
+                        const month = monthLabels.find(
+                          (m) => m.weekIndex === weekIndex
+                        );
                         return (
                           <div
-                            key={`${day.date}-${dayIndex}`}
-                            className={`w-full aspect-square rounded-[1px] sm:rounded-[2px] min-w-0 ${
-                              isPad
-                                ? "opacity-0 pointer-events-none"
-                                : "cursor-pointer ring-0 hover:ring-1 hover:ring-folio-accent/50 hover:ring-offset-1 hover:ring-offset-folio-section"
-                            }`}
-                            style={{
-                              backgroundColor: isPad
-                                ? "transparent"
-                                : getContributionColor(day),
-                            }}
-                            onMouseEnter={(event) => {
-                              if (isPad || !calendarRef.current) return;
-                              const cell = event.currentTarget.getBoundingClientRect();
-                              const parent =
-                                calendarRef.current.getBoundingClientRect();
-                              setHoveredDay(day);
-                              setTooltipPos({
-                                x: cell.left + cell.width / 2 - parent.left,
-                                y: cell.top - parent.top,
-                              });
-                            }}
-                            onMouseLeave={() => setHoveredDay(null)}
-                          />
+                            key={`month-${weekIndex}`}
+                            className="relative h-3 sm:h-4 overflow-visible"
+                          >
+                            {month?.label ? (
+                              <span className="absolute left-0 top-0 text-[8px] sm:text-[10px] leading-none text-folio-accent/55 whitespace-nowrap">
+                                {month.label}
+                              </span>
+                            ) : null}
+                          </div>
                         );
                       })}
                     </div>
-                  ))}
+
+                    <div
+                      className="grid"
+                      style={{
+                        gap: "clamp(2px, 0.35vw, 3px)",
+                        gridTemplateColumns: `1.75rem repeat(${contributionWeeks.length}, minmax(0, 1fr))`,
+                      }}
+                    >
+                      <div
+                        className="grid"
+                        style={{
+                          gap: "clamp(2px, 0.35vw, 3px)",
+                          gridTemplateRows: "repeat(7, minmax(0, 1fr))",
+                        }}
+                      >
+                        {WEEKDAY_LABELS.map((label, index) => (
+                          <div
+                            key={`weekday-${index}`}
+                            className="aspect-square min-h-0 text-[7px] sm:text-[9px] leading-none text-folio-accent/55 flex items-center justify-end pr-1"
+                          >
+                            <span className="hidden min-[400px]:inline">
+                              {label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {contributionWeeks.map((week, weekIndex) => (
+                        <div
+                          key={`week-${weekIndex}`}
+                          className="grid min-w-0"
+                          style={{
+                            gap: "clamp(2px, 0.35vw, 3px)",
+                            gridTemplateRows: "repeat(7, minmax(0, 1fr))",
+                          }}
+                        >
+                          {week.map((day, dayIndex) => {
+                            const isPad = day.date.startsWith("pad-");
+                            return (
+                              <div
+                                key={`${day.date}-${dayIndex}`}
+                                className={`w-full aspect-square min-w-0 min-h-0 rounded-[1px] sm:rounded-[2px] ${
+                                  isPad
+                                    ? "opacity-0 pointer-events-none"
+                                    : "cursor-pointer hover:outline hover:outline-1 hover:outline-folio-accent/50 hover:outline-offset-1"
+                                }`}
+                                style={{
+                                  backgroundColor: isPad
+                                    ? "transparent"
+                                    : getContributionColor(day),
+                                }}
+                                onMouseEnter={(event) => {
+                                  if (isPad || !calendarRef.current) return;
+                                  const cell =
+                                    event.currentTarget.getBoundingClientRect();
+                                  const parent =
+                                    calendarRef.current.getBoundingClientRect();
+                                  setHoveredDay(day);
+                                  setTooltipPos({
+                                    x:
+                                      cell.left +
+                                      cell.width / 2 -
+                                      parent.left,
+                                    y: cell.top - parent.top,
+                                  });
+                                }}
+                                onMouseLeave={() => setHoveredDay(null)}
+                              />
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+
+                <p className="mt-2 text-[10px] text-folio-accent/45 sm:hidden">
+                  Swipe sideways to explore the full year
+                </p>
               </div>
             )}
 
-            <div className="flex items-center gap-4 mt-6 text-xs text-folio-accent/60">
+            <div className="flex items-center gap-3 sm:gap-4 mt-6 text-xs text-folio-accent/60">
               <span>Less</span>
               <div className="flex gap-1">
-                <div className="w-3 h-3 rounded-[2px] bg-folio-heatmap-empty"></div>
-                <div className="w-3 h-3 rounded-[2px] bg-[#A9C987]"></div>
-                <div className="w-3 h-3 rounded-[2px] bg-[#7DA651]"></div>
-                <div className="w-3 h-3 rounded-[2px] bg-[#4D7028]"></div>
-                <div className="w-3 h-3 rounded-[2px] bg-folio-accent"></div>
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-folio-heatmap-empty"></div>
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-[#A9C987]"></div>
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-[#7DA651]"></div>
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-[#4D7028]"></div>
+                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-folio-accent"></div>
               </div>
               <span>More</span>
             </div>
