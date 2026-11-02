@@ -22,7 +22,7 @@ export const THEME_COLORS = {
     section: "#16181f",
     ink: "#F2EFE8",
     menu: "#1e1830",
-    heatmapEmpty: "#2a2d38",
+    heatmapEmpty: "#3a3f4d",
   },
 } as const;
 

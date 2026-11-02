@@ -491,6 +491,7 @@ export default function Projects() {
   const monthLabels = useMemo(() => {
     const labels: { label: string; weekIndex: number }[] = [];
     let lastMonth = -1;
+    let lastLabelWeek = -99;
 
     contributionWeeks.forEach((week, weekIndex) => {
       // Skip pad cells so Invalid Dates don't shift month labels
@@ -500,8 +501,14 @@ export default function Projects() {
       if (!firstDay) return;
       const month = new Date(firstDay.date + "T00:00:00").getMonth();
       if (Number.isNaN(month) || month === lastMonth) return;
+      // Avoid overlapping month text when months start in adjacent weeks
+      if (weekIndex - lastLabelWeek < 2 && lastMonth !== -1) {
+        lastMonth = month;
+        return;
+      }
       labels.push({ label: MONTH_SHORT[month], weekIndex });
       lastMonth = month;
+      lastLabelWeek = weekIndex;
     });
 
     return labels;
@@ -535,7 +542,7 @@ export default function Projects() {
     <section
       ref={sectionRef}
       id="projects"
-      className="pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-folio-section relative overflow-hidden scroll-mt-[70px]"
+      className="pt-12 pb-24 px-4 sm:px-6 lg:px-8 min-h-screen bg-folio-section relative overflow-x-clip scroll-mt-[70px]"
     >
       <div
         className="absolute inset-0 opacity-[0.03]"
@@ -848,93 +855,106 @@ export default function Projects() {
                   </div>
                 )}
 
-                {/*
-                  One CSS grid for months + weekdays + cells so every label
-                  sits on the same track as its row/column (GitHub-style).
-                */}
-                <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-1 [scrollbar-width:thin]">
-                  <div
-                    className="grid w-max [--cell:10px] sm:[--cell:11px] md:[--cell:12px] lg:[--cell:13px] [--label:22px] sm:[--label:28px] [--gap:2px] sm:[--gap:3px]"
-                    style={{
-                      gap: "var(--gap)",
-                      gridTemplateColumns: `var(--label) repeat(${contributionWeeks.length}, var(--cell))`,
-                      gridTemplateRows: `14px repeat(7, var(--cell))`,
-                    }}
-                  >
-                    {/* Month row */}
-                    <div />
-                    {contributionWeeks.map((_, weekIndex) => {
-                      const month = monthLabels.find(
-                        (m) => m.weekIndex === weekIndex
-                      );
-                      return (
-                        <div
-                          key={`month-${weekIndex}`}
-                          className="relative overflow-visible"
-                        >
-                          {month?.label ? (
-                            <span className="absolute left-0 top-1/2 -translate-y-1/2 text-[9px] sm:text-[10px] leading-none text-folio-accent/55 whitespace-nowrap">
-                              {month.label}
-                            </span>
-                          ) : null}
-                        </div>
-                      );
-                    })}
+                {(() => {
+                  const weeks = contributionWeeks.length;
+                  const cell = 12;
+                  const gap = 3;
+                  const labelW = 28;
+                  const monthH = 16;
+                  const width = labelW + weeks * (cell + gap) - gap;
+                  const height = monthH + 7 * (cell + gap) - gap;
+                  const labelFill =
+                    theme === "dark"
+                      ? "rgba(168, 201, 122, 0.55)"
+                      : "rgba(45, 80, 22, 0.55)";
 
-                    {/* Weekday labels + contribution cells, row by row */}
-                    {WEEKDAY_LABELS.map((label, dayIndex) => (
-                      <div key={`row-${dayIndex}`} className="contents">
-                        <div className="flex items-center justify-end pr-1 text-[9px] leading-none text-folio-accent/55">
-                          <span className="hidden min-[380px]:inline">
-                            {label}
-                          </span>
-                        </div>
-                        {contributionWeeks.map((week, weekIndex) => {
-                          const day = week[dayIndex];
-                          if (!day) {
+                  return (
+                    <div className="w-full overflow-x-auto overscroll-x-contain touch-pan-x pb-1 [scrollbar-width:thin]">
+                      <svg
+                        viewBox={`0 0 ${width} ${height}`}
+                        className="block h-auto w-full max-sm:min-w-[720px]"
+                        role="img"
+                        aria-label={`GitHub contribution graph for ${selectedYear}`}
+                      >
+                        {monthLabels.map((month) => (
+                          <text
+                            key={`month-${month.weekIndex}-${month.label}`}
+                            x={labelW + month.weekIndex * (cell + gap)}
+                            y={11}
+                            fill={labelFill}
+                            fontSize="9"
+                            fontFamily="ui-sans-serif, system-ui, sans-serif"
+                          >
+                            {month.label}
+                          </text>
+                        ))}
+
+                        {WEEKDAY_LABELS.map((label, dayIndex) =>
+                          label ? (
+                            <text
+                              key={`weekday-${dayIndex}`}
+                              x={labelW - 4}
+                              y={
+                                monthH +
+                                dayIndex * (cell + gap) +
+                                cell / 2
+                              }
+                              textAnchor="end"
+                              dominantBaseline="central"
+                              fill={labelFill}
+                              fontSize="9"
+                              fontFamily="ui-sans-serif, system-ui, sans-serif"
+                            >
+                              {label}
+                            </text>
+                          ) : null
+                        )}
+
+                        {contributionWeeks.map((week, weekIndex) =>
+                          week.map((day, dayIndex) => {
+                            const isPad = day.date.startsWith("pad-");
+                            if (isPad) return null;
+                            const x = labelW + weekIndex * (cell + gap);
+                            const y = monthH + dayIndex * (cell + gap);
                             return (
-                              <div
-                                key={`empty-${weekIndex}-${dayIndex}`}
-                              />
+                              <rect
+                                key={`${day.date}-${dayIndex}`}
+                                x={x}
+                                y={y}
+                                width={cell}
+                                height={cell}
+                                rx={2}
+                                ry={2}
+                                fill={getContributionColor(day)}
+                                className="cursor-pointer"
+                                onMouseEnter={(event) => {
+                                  if (!calendarRef.current) return;
+                                  const rect =
+                                    event.currentTarget.getBoundingClientRect();
+                                  const parent =
+                                    calendarRef.current.getBoundingClientRect();
+                                  setHoveredDay(day);
+                                  setTooltipPos({
+                                    x:
+                                      rect.left +
+                                      rect.width / 2 -
+                                      parent.left,
+                                    y: rect.top - parent.top,
+                                  });
+                                }}
+                                onMouseLeave={() => setHoveredDay(null)}
+                              >
+                                <title>
+                                  {`${day.count} contribution${day.count === 1 ? "" : "s"} on ${formatDate(day.date)}`}
+                                </title>
+                              </rect>
                             );
-                          }
-                          const isPad = day.date.startsWith("pad-");
-                          return (
-                            <div
-                              key={`${day.date}-${dayIndex}`}
-                              className={`rounded-[2px] ${
-                                isPad
-                                  ? "opacity-0 pointer-events-none"
-                                  : "cursor-pointer hover:outline hover:outline-1 hover:outline-folio-accent/50 hover:outline-offset-[1px]"
-                              }`}
-                              style={{
-                                width: "var(--cell)",
-                                height: "var(--cell)",
-                                backgroundColor: isPad
-                                  ? "transparent"
-                                  : getContributionColor(day),
-                              }}
-                              onMouseEnter={(event) => {
-                                if (isPad || !calendarRef.current) return;
-                                const cell =
-                                  event.currentTarget.getBoundingClientRect();
-                                const parent =
-                                  calendarRef.current.getBoundingClientRect();
-                                setHoveredDay(day);
-                                setTooltipPos({
-                                  x:
-                                    cell.left + cell.width / 2 - parent.left,
-                                  y: cell.top - parent.top,
-                                });
-                              }}
-                              onMouseLeave={() => setHoveredDay(null)}
-                            />
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                          })
+                        )}
+                      </svg>
+                    </div>
+                  );
+                })()}
 
                 <p className="mt-2 text-[10px] text-folio-accent/45 sm:hidden">
                   Swipe sideways to explore the full year
@@ -942,7 +962,7 @@ export default function Projects() {
               </div>
             )}
 
-            <div className="flex items-center gap-3 sm:gap-4 mt-6 text-xs text-folio-accent/60">
+            <div className="flex items-center gap-3 sm:gap-4 mt-6 text-xs text-folio-accent/60 pl-8">
               <span>Less</span>
               <div className="flex gap-1">
                 <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-[2px] bg-folio-heatmap-empty"></div>
